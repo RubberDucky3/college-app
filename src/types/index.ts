@@ -1,5 +1,20 @@
 // ─── College Types ───────────────────────────────────────────────
 
+export type StandardizedTestPolicy =
+  | "required"
+  | "recommended"
+  | "optional"
+  | "considered-if-submitted"
+  | "not-considered"
+  | "test-flexible";
+
+export type InterviewPolicy =
+  | "required"
+  | "recommended"
+  | "optional"
+  | "not-offered"
+  | "informational";
+
 export interface College {
   id: string;
   name: string;
@@ -22,6 +37,24 @@ export interface College {
   actComposite75th: number;
   applicationFee: number;
   applicationDeadline: string; // e.g. "January 15"
+
+  // Admissions Requirements (US News style)
+  admissionInterview: InterviewPolicy;
+  standardizedTestPolicy: StandardizedTestPolicy;
+  satActScoresMustBeReceivedBy: string; // deadline for test scores
+
+  // Application Details
+  earlyDecisionDeadline: string;
+  earlyActionDeadline: string;
+  commonApplicationAccepted: boolean;
+  housingDepositDeadline: string;
+  priorityApplicationDeadline: string;
+  notificationDate: string;
+
+  // Entering Class Stats
+  earlyDecisionAcceptanceRate: number; // 0-100
+  studentsSubmittingSatPct: number; // 0-100
+  studentsSubmittingActPct: number; // 0-100
 
   // Cost
   tuitionInState: number;
@@ -55,6 +88,10 @@ export interface College {
   femalePct: number;
   diversityIndex: number;
   internationalPct: number;
+
+  // Branding
+  primaryColor: string;
+  secondaryColor: string;
 }
 
 export interface CollegeSummary {
@@ -67,9 +104,13 @@ export interface CollegeSummary {
   tuitionInState: number;
   tuitionOutOfState: number;
   avgNetPrice: number;
+  graduationRate4yr: number;
   graduationRate6yr: number;
   totalEnrollment: number;
   medianEarnings10yr: number;
+  primaryColor: string;
+  secondaryColor: string;
+  logoUrl: string;
 }
 
 // ─── Financial Aid Types ─────────────────────────────────────────
@@ -130,7 +171,7 @@ export interface CollegeFilters {
   maxTuition?: number;
   minAcceptanceRate?: number;
   maxAcceptanceRate?: number;
-  sortBy?: "name" | "acceptanceRate" | "tuitionInState" | "graduationRate6yr" | "medianEarnings10yr";
+  sortBy?: "name" | "acceptanceRate" | "tuitionInState" | "graduationRate4yr" | "graduationRate6yr" | "medianEarnings10yr";
   sortOrder?: "asc" | "desc";
   page?: number;
 }

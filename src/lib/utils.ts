@@ -26,6 +26,54 @@ export function formatACT(act25th: number, act75th: number): string {
   return `${act25th}-${act75th}`;
 }
 
+// ─── Admissions Policy Formatters ───────────────────────────────
+
+export function formatTestPolicy(policy: string): string {
+  const map: Record<string, string> = {
+    required: "Required",
+    recommended: "Recommended",
+    optional: "Optional",
+    "considered-if-submitted": "Considered if Submitted",
+    "not-considered": "Not Considered for Admission",
+    "test-flexible": "Test Flexible",
+  };
+  return map[policy] || policy;
+}
+
+export function formatInterviewPolicy(policy: string): string {
+  const map: Record<string, string> = {
+    required: "Required",
+    recommended: "Recommended",
+    optional: "Optional",
+    "not-offered": "Not Offered",
+    informational: "Informational Only",
+  };
+  return map[policy] || policy;
+}
+
+export function testPolicyColor(policy: string): string {
+  if (policy === "required") return "text-red-600";
+  if (policy === "not-considered") return "text-green-600";
+  if (policy === "optional") return "text-yellow-600";
+  return "text-gray-700";
+}
+
+export function formatCommonApp(accepted: boolean): string {
+  return accepted ? "Accepted ✓" : "Not Accepted";
+}
+
+export function formatYesNo(value: boolean | string): string {
+  if (typeof value === "boolean") return value ? "Yes" : "No";
+  return value || "N/A";
+}
+
+// ─── Logo ──────────────────────────────────────────────────────────
+
+export function getCollegeLogoUrl(website: string): string {
+  const domain = website.replace(/^https?:\/\/(www\.)?/, "");
+  return `https://logos.hunter.io/${domain}`;
+}
+
 // ─── Color Helpers ───────────────────────────────────────────────
 
 export function acceptanceRateColor(rate: number): string {
@@ -36,9 +84,9 @@ export function acceptanceRateColor(rate: number): string {
 }
 
 export function graduationRateColor(rate: number): string {
-  if (rate < 30) return "text-red-600";
-  if (rate < 50) return "text-yellow-600";
-  if (rate < 70) return "text-blue-600";
+  if (rate < 20) return "text-red-600";
+  if (rate < 40) return "text-yellow-600";
+  if (rate < 60) return "text-blue-600";
   return "text-green-600";
 }
 

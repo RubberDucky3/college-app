@@ -1,6 +1,7 @@
 import type { College, CollegeFilters, CollegeSummary } from "@/types";
 import { texasUniversities, texasUniversityMap } from "@/lib/texas-data";
 import { ITEMS_PER_PAGE } from "@/lib/constants";
+import { getCollegeLogoUrl } from "@/lib/utils";
 
 // ─── College Search ─────────────────────────────────────────────
 
@@ -66,8 +67,8 @@ export function searchColleges(filters: CollegeFilters): {
   const sortOrder = filters.sortOrder || "asc";
 
   results.sort((a, b) => {
-    const aVal = a[sortBy as keyof CollegeSummary] ?? 0;
-    const bVal = b[sortBy as keyof CollegeSummary] ?? 0;
+    const aVal = (a as unknown as Record<string, unknown>)[sortBy] ?? 0;
+    const bVal = (b as unknown as Record<string, unknown>)[sortBy] ?? 0;
     if (typeof aVal === "string" && typeof bVal === "string") {
       return sortOrder === "asc"
         ? aVal.localeCompare(bVal)
@@ -112,7 +113,8 @@ export function getFeaturedColleges(count = 6): CollegeSummary[] {
   ];
   return featured
     .map((id) => texasUniversityMap.get(id))
-    .filter(Boolean) as College[];
+    .filter((c): c is College => c !== undefined)
+    .map(toSummary);
 }
 
 export function getCollegesByState(state: string): CollegeSummary[] {
@@ -161,8 +163,12 @@ function toSummary(c: College): CollegeSummary {
     tuitionInState: c.tuitionInState,
     tuitionOutOfState: c.tuitionOutOfState,
     avgNetPrice: c.avgNetPrice,
+    graduationRate4yr: c.graduationRate4yr,
     graduationRate6yr: c.graduationRate6yr,
     totalEnrollment: c.totalEnrollment,
     medianEarnings10yr: c.medianEarnings10yr,
+    primaryColor: c.primaryColor,
+    secondaryColor: c.secondaryColor,
+    logoUrl: getCollegeLogoUrl(c.website),
   };
 }
