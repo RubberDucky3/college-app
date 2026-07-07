@@ -4,17 +4,50 @@ import SearchBar from "@/components/SearchBar";
 import FilterPanel from "@/components/FilterPanel";
 import CollegeCard from "@/components/CollegeCard";
 import Pagination from "@/components/Pagination";
+import CsvExportButton from "@/components/CsvExportButton";
 import { searchColleges } from "@/lib/api";
 import { formatNumber } from "@/lib/utils";
 
-export const metadata: Metadata = {
-  title: "Texas Colleges — CollegeHub",
-  description:
-    "Browse and compare Texas universities. Filter by type, location, size, and more.",
-};
-
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | undefined }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const parts: string[] = [];
+
+  if (params.query) {
+    parts.push(`matching "${params.query}"`);
+  }
+  if (params.state) {
+    parts.push(`in ${params.state}`);
+  }
+  if (params.type) {
+    parts.push(params.type === "public" ? "Public" : "Private");
+  }
+  if (params.size) {
+    const sizeLabels: Record<string, string> = {
+      small: "Small",
+      medium: "Medium",
+      large: "Large",
+      "very-large": "Very Large",
+    };
+    parts.push(sizeLabels[params.size] ?? "");
+  }
+  if (params.program) {
+    parts.push(`with ${params.program}`);
+  }
+
+  const titleSuffix = parts.length > 0 ? ` — ${parts.join(", ")}` : "";
+  const filterDesc =
+    parts.length > 0 ? ` ${parts.join(", ").toLowerCase()}.` : ".";
+  return {
+    title: `Colleges${titleSuffix} — CollegeHub`,
+    description: `Browse and compare universities${filterDesc} Filter by type, location, size, and more.`,
+    alternates: { canonical: "/colleges" },
+  };
 }
 
 export default async function CollegesPage({ searchParams }: PageProps) {
@@ -22,9 +55,11 @@ export default async function CollegesPage({ searchParams }: PageProps) {
 
   const { colleges, total, page, totalPages } = searchColleges({
     query: params.query,
+    state: params.state,
     type: params.type as never,
     locale: params.locale as never,
     size: params.size as never,
+    program: params.program,
     sortBy: params.sortBy as never,
     sortOrder: params.sortOrder as never,
     page: params.page ? Number(params.page) : 1,
@@ -33,21 +68,27 @@ export default async function CollegesPage({ searchParams }: PageProps) {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          Texas Colleges & Universities
-        </h1>
-        <p className="mt-1 text-gray-600 dark:text-gray-400">
-          {formatNumber(total)} colleges found
-          {params.query && (
-            <span>
-              {" "}
-              for &ldquo;
-              <span className="font-medium">{params.query}</span>
-              &rdquo;
-            </span>
-          )}
-        </p>
+      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Colleges & Universities
+          </h1>
+          <h2 className="text-lg font-italic text-gray-900 dark:text-gray-100">
+            Select up to five to compare
+          </h2>
+          <p className="mt-1 text-gray-600 dark:text-gray-400">
+            {formatNumber(total)} colleges found
+            {params.query && (
+              <span>
+                {" "}
+                for &ldquo;
+                <span className="font-medium">{params.query}</span>
+                &rdquo;
+              </span>
+            )}
+          </p>
+        </div>
+        <CsvExportButton />
       </div>
 
       {/* Search + Filters */}

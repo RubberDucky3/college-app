@@ -8,9 +8,15 @@ import {
 import { formatCurrency } from "@/lib/utils";
 
 export const metadata: Metadata = {
-  title: "Financial Aid — CollegeHub",
+  title: "Financial Aid, Grants & Scholarships — CollegeHub",
   description:
-    "Explore grants, loans, and scholarships for Texas college students. Find financial aid options to fund your education.",
+    "Explore grants, loans, and scholarships for college students. Compare financial aid options, average grant aid, Pell grants, and federal loans to fund your education.",
+  alternates: { canonical: "/financial" },
+  openGraph: {
+    title: "Financial Aid, Grants & Scholarships — CollegeHub",
+    description:
+      "Explore grants, loans, and scholarships for college students. Compare financial aid options and find money for college.",
+  },
 };
 
 export default function FinancialAidPage() {

@@ -1,23 +1,36 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import SearchBar from "@/components/SearchBar";
 import StatsCard from "@/components/StatsCard";
 import CollegeCard from "@/components/CollegeCard";
+import OnboardingGate from "@/components/OnboardingGate";
 import { getFeaturedColleges, getStatewideStats } from "@/lib/api";
 import { formatCurrency, formatPercent, formatNumber } from "@/lib/utils";
-import { texasPublicCount, texasPrivateCount } from "@/lib/texas-data";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "CollegeHub — Your Free College Planning Tool",
+    description:
+      "Compare universities, explore financial aid, find your best-fit college with our match quiz, and plan your future — all free.",
+  },
+};
 
 export default function HomePage() {
   const featured = getFeaturedColleges();
   const stats = getStatewideStats();
 
   return (
+    <OnboardingGate>
     <div>
       {/* ─── Hero ─────────────────────────────────────── */}
       <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
           <div className="mx-auto max-w-2xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Your Texas College Hub
+              Your College Hub
             </h1>
             <p className="mt-4 text-lg text-blue-100 sm:text-xl">
               Compare universities, explore financial aid, and find everything
@@ -50,14 +63,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── Statewide Stats ─────────────────────────── */}
+      {/* ─── Stats Overview ─────────────────────────── */}
       <section className="border-b border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900/50">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <StatsCard
-              title="Texas Colleges"
+              title="Colleges"
               value={formatNumber(stats.totalColleges)}
-              subtitle={`${texasPublicCount} public · ${texasPrivateCount} private`}
+              subtitle={`${stats.publicColleges} public · ${stats.privateColleges} private`}
               color="blue"
             />
             <StatsCard
@@ -69,7 +82,7 @@ export default function HomePage() {
             <StatsCard
               title="Avg Acceptance Rate"
               value={formatPercent(stats.avgAcceptanceRate)}
-              subtitle="Across all Texas"
+              subtitle="Across all listed"
               color="purple"
             />
             <StatsCard
@@ -86,7 +99,7 @@ export default function HomePage() {
             />
             <StatsCard
               title="Total Students"
-              value={formatNumber(500000)}
+              value={formatNumber(stats.totalStudents)}
               subtitle="Across all listed"
               color="green"
             />
@@ -99,10 +112,10 @@ export default function HomePage() {
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100">
-              Featured Texas Universities
+              Featured Universities
             </h2>
             <p className="mt-1 text-gray-600 dark:text-gray-400">
-              Explore Texas&apos;s top public and private institutions
+              Explore top public and private institutions
             </p>
           </div>
           <Link
@@ -124,7 +137,7 @@ export default function HomePage() {
             href="/colleges"
             className="inline-block rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
           >
-            View All Texas Colleges →
+            View All Colleges →
           </Link>
         </div>
       </section>
@@ -145,7 +158,7 @@ export default function HomePage() {
                 College Explorer
               </h3>
               <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                Search and compare Texas universities by stats, cost, size, and
+                Search and compare universities by stats, cost, size, and
                 more.
               </p>
             </Link>
@@ -177,5 +190,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </OnboardingGate>
   );
 }

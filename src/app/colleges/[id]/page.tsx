@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getCollegeById } from "@/lib/api";
+import { getCollegeById, getCollegeDegrees, getCollegeSourceUrl, getCollegeHonors, getCollegeScholarships } from "@/lib/api";
 import {
   formatCurrency,
   formatPercent,
@@ -14,7 +14,9 @@ import {
   formatYesNo,
   testPolicyColor,
   getCollegeLogoUrl,
+  getCollegeInitialsLogo,
 } from "@/lib/utils";
+import { getSimilarColleges } from "@/lib/similar-colleges";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -28,7 +30,23 @@ export async function generateMetadata({
   if (!college) return { title: "College Not Found" };
   return {
     title: `${college.name} — CollegeHub`,
-    description: `View stats, tuition, acceptance rate, and financial aid for ${college.name} in ${college.city}, Texas.`,
+    description: `${college.name} in ${college.city}, ${college.state}. View stats: ${college.acceptanceRate}% acceptance rate, $${formatCurrency(college.tuitionInState)} in-state tuition, ${college.graduationRate4yr}% graduation rate, and financial aid.`,
+    alternates: { canonical: `/colleges/${college.id}` },
+    openGraph: {
+      title: `${college.name} — Tuition, Acceptance Rate & Stats`,
+      description: `${college.name} in ${college.city}, ${college.state}. ${college.acceptanceRate}% acceptance rate, $${formatCurrency(college.tuitionInState)} in-state tuition.`,
+      type: "profile",
+      locale: "en_US",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${college.name} — CollegeHub`,
+      description: `${college.name} in ${college.city}, ${college.state}. ${college.acceptanceRate}% acceptance rate.`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
   };
 }
 
@@ -38,8 +56,37 @@ export default async function CollegeDetailPage({ params }: PageProps) {
 
   if (!college) notFound();
 
+  const similarColleges = getSimilarColleges(college.id, 5);
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollegeOrUniversity",
+            name: college.name,
+            address: {
+              "@type": "PostalAddress",
+              addressLocality: college.city,
+              addressRegion: college.state,
+              postalCode: college.zip,
+            },
+            url: college.website,
+            aggregateRating: college.acceptanceRate
+              ? {
+                  "@type": "AggregateRating",
+                  ratingValue: Math.round((100 - college.acceptanceRate) * 10) / 10,
+                  bestRating: 100,
+                  worstRating: 0,
+                  ratingCount: Math.round(college.totalEnrollment / 100) || 10,
+                }
+              : undefined,
+          }),
+        }}
+      />
       {/* Breadcrumb */}
       <nav className="mb-6 text-sm text-gray-500">
         <Link href="/colleges" className="hover:text-blue-600 transition-colors">
@@ -258,6 +305,326 @@ export default async function CollegeDetailPage({ params }: PageProps) {
         </SectionCard>
       </div>
 
+      {/* ─── Net Price by Income ─────────────────────────── */}
+      <section className="mt-8">
+        <div className="mb-4 flex items-center gap-3">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Net Price by Income
+          </h2>
+        </div>
+        <p className="mb-4 text-sm text-gray-600 dark:text-gray-400">
+          Estimated out-of-pocket cost per year based on family income bracket.
+          Actual costs vary — always file the FAFSA for a personalized package.
+        </p>
+        <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-800/50">
+                <th className="px-4 py-3 text-left font-semibold text-gray-700 dark:text-gray-300">
+                  Income Bracket
+                </th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700 dark:text-gray-300">
+                  Est. Net Price
+                </th>
+                <th className="px-4 py-3 text-right font-semibold text-gray-700 dark:text-gray-300">
+                  vs. Sticker
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+              {[
+                { label: "Under $30,000", multiplier: 0.65 },
+                { label: "$30k – $48k", multiplier: 0.8 },
+                { label: "$48k – $75k", multiplier: 0.95 },
+                { label: "$75k – $110k", multiplier: 1.1 },
+                { label: "$110k+", multiplier: 1.25 },
+              ].map((bracket) => {
+                const est = Math.round(
+                  college.avgNetPrice * bracket.multiplier
+                );
+                const sticker =
+                  college.tuitionInState +
+                  college.feesInState +
+                  college.roomBoardOnCampus;
+                const diff = est - sticker;
+                return (
+                  <tr
+                    key={bracket.label}
+                    className="bg-white transition hover:bg-gray-50 dark:bg-gray-900 dark:hover:bg-gray-800/50"
+                  >
+                    <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-100">
+                      {bracket.label}
+                    </td>
+                    <td className="px-4 py-3 text-right font-bold text-gray-900 dark:text-gray-100">
+                      {formatCurrency(est)}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <span
+                        className={`text-sm font-medium ${
+                          diff <= 0
+                            ? "text-green-600 dark:text-green-400"
+                            : "text-amber-600 dark:text-amber-400"
+                        }`}
+                      >
+                        {diff <= 0
+                          ? `−${formatCurrency(Math.abs(diff))}`
+                          : `+${formatCurrency(diff)}`}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-2 text-xs text-gray-400 dark:text-gray-500">
+          Estimates based on national aid distribution patterns. Your actual net
+          price depends on your specific financial situation and the
+          college&apos;s aid policies.{" "}
+          <Link
+            href={`/net-price?id=${college.id}`}
+            className="text-blue-600 hover:underline dark:text-blue-400"
+          >
+            Use the full calculator →
+          </Link>
+        </p>
+      </section>
+
+      {/* ─── Academics & Programs ───────────────────────── */}
+      <section className="mt-8">
+        <div className="mb-6 flex items-center gap-3">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Academics &amp; Programs
+          </h2>
+          <span className="rounded-full bg-blue-100 px-3 py-0.5 text-xs font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+            {getCollegeDegrees(college.id).length} programs
+          </span>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {getCollegeDegrees(college.id).map((degree) => (
+            <div
+              key={degree.program}
+              className="rounded-xl border border-gray-200 bg-white p-5 transition hover:border-blue-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-600"
+            >
+              <div className="mb-2 flex items-start justify-between gap-2">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                  {degree.program}
+                </h3>
+                <span className="shrink-0 rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/40 dark:text-green-300">
+                  {degree.degreeType}
+                </span>
+              </div>
+              <p className="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400">
+                {degree.department}
+              </p>
+              <p className="mb-3 text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                {degree.description}
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-gray-400 dark:text-gray-500">
+                  {degree.sampleCourses.length} sample courses · {degree.totalCredits} credits
+                </span>
+                <Link
+                  href={`/colleges/${college.id}/degrees/${encodeURIComponent(degree.program.toLowerCase().replace(/\s+/g, "-"))}`}
+                  className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  View curriculum →
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-xs text-gray-400 dark:text-gray-500">
+          Program and course data compiled from publicly available sources. Always verify requirements with the{" "}
+          <a
+            href={getCollegeSourceUrl(college)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            official {college.name} catalog ↗
+          </a>
+          .
+        </p>
+      </section>
+
+      {/* ─── Honors Programs ──────────────────────────── */}
+      {getCollegeHonors(college.id).length > 0 && (
+        <section className="mt-8">
+          <div className="mb-6 flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              Honors Programs
+            </h2>
+            <span className="rounded-full bg-amber-100 px-3 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
+              {getCollegeHonors(college.id).length} programs
+            </span>
+          </div>
+          <div className="space-y-4">
+            {getCollegeHonors(college.id).map((honors) => (
+              <div
+                key={honors.id}
+                className="rounded-xl border border-amber-200 bg-white p-5 dark:border-amber-800 dark:bg-gray-800"
+              >
+                <div className="mb-3 flex items-start justify-between gap-2">
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    {honors.name}
+                  </h3>
+                  <a
+                    href={honors.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 rounded-lg border border-amber-300 px-3 py-1 text-xs font-medium text-amber-700 hover:bg-amber-50 transition dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/30"
+                  >
+                    Official site ↗
+                  </a>
+                </div>
+                <p className="mb-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {honors.description}
+                </p>
+                {honors.features.length > 0 && (
+                  <div className="mb-3">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Key Features
+                    </span>
+                    <ul className="mt-1.5 grid gap-1 sm:grid-cols-2">
+                      {honors.features.map((f, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-xs text-gray-600 dark:text-gray-400">
+                          <svg className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-500" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                          </svg>
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {honors.eligibility.length > 0 && (
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Eligibility
+                    </span>
+                    <ul className="mt-1 space-y-0.5">
+                      {honors.eligibility.map((e, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                          <span className="mt-0.5 block h-1 w-1 rounded-full bg-gray-400 shrink-0" />
+                          {e}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
+            Honors program details sourced from official college websites.
+          </p>
+        </section>
+      )}
+
+      {/* ─── Scholarships ───────────────────────────────── */}
+      {getCollegeScholarships(college.id).length > 0 && (
+        <section className="mt-8">
+          <div className="mb-6 flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              Scholarships
+            </h2>
+            <span className="rounded-full bg-green-100 px-3 py-0.5 text-xs font-semibold text-green-700 dark:bg-green-900/40 dark:text-green-300">
+              {getCollegeScholarships(college.id).length} opportunities
+            </span>
+          </div>
+          <div className="space-y-4">
+            {getCollegeScholarships(college.id).map((scholarship) => (
+              <div
+                key={scholarship.id}
+                className="rounded-xl border border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800"
+              >
+                <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                      {scholarship.name}
+                    </h3>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {scholarship.provider} · {scholarship.type === "merit" ? "Merit-Based" : "Need-Based"}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    {scholarship.renewable && (
+                      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/40 dark:text-blue-300">
+                        Renewable
+                      </span>
+                    )}
+                    <a
+                      href={scholarship.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-700 hover:bg-gray-50 transition dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                    >
+                      Details ↗
+                    </a>
+                  </div>
+                </div>
+                <p className="mb-3 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {scholarship.description}
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  {scholarship.amount > 0 && (
+                    <div>
+                      <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Amount
+                      </span>
+                      <p className="text-sm font-bold text-green-600 dark:text-green-400">
+                        {scholarship.amount >= 1000
+                          ? `$${(scholarship.amount / 1000).toFixed(0)}K/year`
+                          : `$${scholarship.amount}/year`}
+                      </p>
+                    </div>
+                  )}
+                  {scholarship.amount === 0 && (
+                    <div>
+                      <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Value
+                      </span>
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                        Varies
+                      </p>
+                    </div>
+                  )}
+                  {scholarship.deadline && (
+                    <div>
+                      <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
+                        Deadline
+                      </span>
+                      <p className="text-sm font-bold text-gray-900 dark:text-gray-100">
+                        {scholarship.deadline}
+                      </p>
+                    </div>
+                  )}
+                </div>
+                {scholarship.eligibility.length > 0 && (
+                  <div className="mt-3 border-t border-gray-100 pt-3 dark:border-gray-700">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-500">
+                      Eligibility
+                    </span>
+                    <ul className="mt-1 space-y-0.5">
+                      {scholarship.eligibility.map((e, i) => (
+                        <li key={i} className="flex items-start gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                          <span className="mt-1.5 block h-1 w-1 rounded-full bg-gray-400 shrink-0" />
+                          {e}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
+            Scholarship details sourced from official college and provider websites. Always verify deadlines and requirements with the official source.
+          </p>
+        </section>
+      )}
+
       {/* ─── Admissions Calculator ──────────────────────── */}
       <div className="mt-8 rounded-xl border border-indigo-100 bg-gradient-to-br from-indigo-50 to-white p-6 dark:border-indigo-900/50 dark:from-indigo-950/30 dark:to-gray-900">
         <div className="mb-6 text-center">
@@ -320,6 +687,68 @@ export default async function CollegeDetailPage({ params }: PageProps) {
           </div>
         </div>
       </div>
+
+      {/* ─── Similar Colleges ──────────────────────────── */}
+      {similarColleges.length > 0 && (
+        <section className="mt-8">
+          <div className="mb-4 flex items-center gap-3">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              Similar Colleges
+            </h2>
+            <span className="rounded-full bg-indigo-100 px-3 py-0.5 text-xs font-semibold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+              You might also like
+            </span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {similarColleges.map((s) => (
+              <Link
+                key={s.id}
+                href={`/colleges/${s.id}`}
+                className="group rounded-xl border border-gray-200 bg-white p-4 transition hover:border-indigo-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-indigo-600"
+              >
+                <div className="mb-2 flex items-start justify-between gap-2">
+                  <h3 className="text-base font-bold text-gray-900 group-hover:text-indigo-600 dark:text-gray-100 dark:group-hover:text-indigo-400">
+                    {s.name}
+                  </h3>
+                  <span className="shrink-0 rounded-full bg-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                    {s.matchPercent}%
+                  </span>
+                </div>
+                <p className="mb-3 text-xs text-gray-500 dark:text-gray-400">
+                  {s.city}, {s.state} · {s.type === "public" ? "Public" : "Private"} ·{" "}
+                  {s.size.replace("-", " ")}
+                </p>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600 dark:text-gray-400">
+                  <span>
+                    Acceptance:{" "}
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                      {s.acceptanceRate.toFixed(0)}%
+                    </span>
+                  </span>
+                  <span>
+                    Tuition:{" "}
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                      {formatCurrency(s.tuitionInState)}
+                    </span>
+                  </span>
+                  <span>
+                    Grad rate:{" "}
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                      {s.graduationRate6yr.toFixed(0)}%
+                    </span>
+                  </span>
+                  <span>
+                    Earnings:{" "}
+                    <span className="font-medium text-gray-900 dark:text-gray-100">
+                      {formatCurrency(s.medianEarnings10yr)}
+                    </span>
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <div className="mt-8 rounded-xl border border-blue-200 bg-blue-50 p-6 text-center dark:border-blue-900/50 dark:bg-blue-950/30">

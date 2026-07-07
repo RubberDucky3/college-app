@@ -2,11 +2,46 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { StudentGraphProvider } from "@/contexts/StudentGraph";
+import CompareBar from "@/components/CompareBar";
+import AIMentor from "@/components/AIMentor";
+import PwaInstallPrompt from "@/components/PwaInstallPrompt";
+import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
 
 export const metadata: Metadata = {
-  title: "CollegeHub — Texas College Application Resource",
+  title: {
+    default: "CollegeHub — Compare 2,600+ Colleges by Tuition, Acceptance Rate & Aid",
+    template: "%s — CollegeHub",
+  },
   description:
-    "Find Texas college stats, compare universities, explore financial aid options including grants, loans, and scholarships — all in one place.",
+    "Find and compare every US college. Search by tuition, acceptance rate, SAT scores, financial aid, and programs. Free college planning tools, net price calculator, and college match quiz.",
+  manifest: "/manifest.json",
+  metadataBase: new URL("https://collegehub.app"),
+  openGraph: {
+    type: "website",
+    siteName: "CollegeHub",
+    title: "CollegeHub — Compare 2,600+ Colleges by Tuition, Acceptance Rate & Aid",
+    description:
+      "Find and compare every US college. Search by tuition, acceptance rate, SAT scores, financial aid, and programs.",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "CollegeHub — Compare 2,600+ Colleges",
+    description:
+      "Find and compare every US college by tuition, acceptance rate, SAT scores, and financial aid.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  other: {
+    "theme-color": "#2563eb",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "CollegeHub",
+    "mobile-web-app-capable": "yes",
+  },
 };
 
 export default function RootLayout({
@@ -33,9 +68,15 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <StudentGraphProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <AIMentor />
+          <CompareBar />
+          <PwaInstallPrompt />
+          <ServiceWorkerRegistration />
+        </StudentGraphProvider>
       </body>
     </html>
   );
