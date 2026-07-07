@@ -1,0 +1,297 @@
+{
+  "generated": "2026-07-06T04:30:13.594Z",
+  "source": "College Scorecard (Most-Recent-Cohorts-Institution.csv)",
+  "totalColleges": 2667,
+  "states": [
+    {
+      "state": "AK",
+      "count": 7,
+      "file": "AK.json"
+    },
+    {
+      "state": "AL",
+      "count": 33,
+      "file": "AL.json"
+    },
+    {
+      "state": "AR",
+      "count": 28,
+      "file": "AR.json"
+    },
+    {
+      "state": "AS",
+      "count": 1,
+      "file": "AS.json"
+    },
+    {
+      "state": "AZ",
+      "count": 37,
+      "file": "AZ.json"
+    },
+    {
+      "state": "CA",
+      "count": 256,
+      "file": "CA.json"
+    },
+    {
+      "state": "CO",
+      "count": 42,
+      "file": "CO.json"
+    },
+    {
+      "state": "CT",
+      "count": 28,
+      "file": "CT.json"
+    },
+    {
+      "state": "DC",
+      "count": 17,
+      "file": "DC.json"
+    },
+    {
+      "state": "DE",
+      "count": 6,
+      "file": "DE.json"
+    },
+    {
+      "state": "FL",
+      "count": 126,
+      "file": "FL.json"
+    },
+    {
+      "state": "FM",
+      "count": 1,
+      "file": "FM.json"
+    },
+    {
+      "state": "GA",
+      "count": 67,
+      "file": "GA.json"
+    },
+    {
+      "state": "GU",
+      "count": 2,
+      "file": "GU.json"
+    },
+    {
+      "state": "HI",
+      "count": 9,
+      "file": "HI.json"
+    },
+    {
+      "state": "IA",
+      "count": 37,
+      "file": "IA.json"
+    },
+    {
+      "state": "ID",
+      "count": 13,
+      "file": "ID.json"
+    },
+    {
+      "state": "IL",
+      "count": 91,
+      "file": "IL.json"
+    },
+    {
+      "state": "IN",
+      "count": 59,
+      "file": "IN.json"
+    },
+    {
+      "state": "KS",
+      "count": 33,
+      "file": "KS.json"
+    },
+    {
+      "state": "KY",
+      "count": 38,
+      "file": "KY.json"
+    },
+    {
+      "state": "LA",
+      "count": 32,
+      "file": "LA.json"
+    },
+    {
+      "state": "MA",
+      "count": 84,
+      "file": "MA.json"
+    },
+    {
+      "state": "MD",
+      "count": 33,
+      "file": "MD.json"
+    },
+    {
+      "state": "ME",
+      "count": 21,
+      "file": "ME.json"
+    },
+    {
+      "state": "MH",
+      "count": 1,
+      "file": "MH.json"
+    },
+    {
+      "state": "MI",
+      "count": 61,
+      "file": "MI.json"
+    },
+    {
+      "state": "MN",
+      "count": 51,
+      "file": "MN.json"
+    },
+    {
+      "state": "MO",
+      "count": 72,
+      "file": "MO.json"
+    },
+    {
+      "state": "MP",
+      "count": 1,
+      "file": "MP.json"
+    },
+    {
+      "state": "MS",
+      "count": 18,
+      "file": "MS.json"
+    },
+    {
+      "state": "MT",
+      "count": 13,
+      "file": "MT.json"
+    },
+    {
+      "state": "NC",
+      "count": 69,
+      "file": "NC.json"
+    },
+    {
+      "state": "ND",
+      "count": 15,
+      "file": "ND.json"
+    },
+    {
+      "state": "NE",
+      "count": 21,
+      "file": "NE.json"
+    },
+    {
+      "state": "NH",
+      "count": 16,
+      "file": "NH.json"
+    },
+    {
+      "state": "NJ",
+      "count": 64,
+      "file": "NJ.json"
+    },
+    {
+      "state": "NM",
+      "count": 15,
+      "file": "NM.json"
+    },
+    {
+      "state": "NV",
+      "count": 14,
+      "file": "NV.json"
+    },
+    {
+      "state": "NY",
+      "count": 228,
+      "file": "NY.json"
+    },
+    {
+      "state": "OH",
+      "count": 122,
+      "file": "OH.json"
+    },
+    {
+      "state": "OK",
+      "count": 31,
+      "file": "OK.json"
+    },
+    {
+      "state": "OR",
+      "count": 30,
+      "file": "OR.json"
+    },
+    {
+      "state": "PA",
+      "count": 139,
+      "file": "PA.json"
+    },
+    {
+      "state": "PR",
+      "count": 64,
+      "file": "PR.json"
+    },
+    {
+      "state": "RI",
+      "count": 13,
+      "file": "RI.json"
+    },
+    {
+      "state": "SC",
+      "count": 40,
+      "file": "SC.json"
+    },
+    {
+      "state": "SD",
+      "count": 16,
+      "file": "SD.json"
+    },
+    {
+      "state": "TN",
+      "count": 56,
+      "file": "TN.json"
+    },
+    {
+      "state": "TX",
+      "count": 149,
+      "file": "TX.json"
+    },
+    {
+      "state": "UT",
+      "count": 22,
+      "file": "UT.json"
+    },
+    {
+      "state": "VA",
+      "count": 70,
+      "file": "VA.json"
+    },
+    {
+      "state": "VI",
+      "count": 1,
+      "file": "VI.json"
+    },
+    {
+      "state": "VT",
+      "count": 12,
+      "file": "VT.json"
+    },
+    {
+      "state": "WA",
+      "count": 63,
+      "file": "WA.json"
+    },
+    {
+      "state": "WI",
+      "count": 47,
+      "file": "WI.json"
+    },
+    {
+      "state": "WV",
+      "count": 26,
+      "file": "WV.json"
+    },
+    {
+      "state": "WY",
+      "count": 6,
+      "file": "WY.json"
+    }
+  ]
+}
