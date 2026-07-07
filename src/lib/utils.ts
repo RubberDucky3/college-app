@@ -69,9 +69,60 @@ export function formatYesNo(value: boolean | string): string {
 
 // ─── Logo ──────────────────────────────────────────────────────────
 
+/** Extract domain from a college website URL. */
+function extractDomain(website: string): string {
+  return website.replace(/^https?:\/\/(www\.)?/, "").replace(/\/.*$/, "");
+}
+
+/**
+ * Return Clearbit logo URL for the college's domain.
+ * Clearbit has a generous free tier (no API key needed for basic usage).
+ * Falls back on the browser to a generated SVG-initials data URI via
+ * the onError handler in the <img> tag.
+ */
 export function getCollegeLogoUrl(website: string): string {
-  const domain = website.replace(/^https?:\/\/(www\.)?/, "");
-  return `https://logos.hunter.io/${domain}`;
+  if (!website) return "";
+  const domain = extractDomain(website);
+  return `https://logo.clearbit.com/${domain}`;
+}
+
+/**
+ * Generate an SVG data URI with the school's initials on a colored circle.
+ * Used as an img src fallback when the Clearbit logo fails to load.
+ *
+ * @param name  - Full school name (e.g. "University of Texas at Austin")
+ * @param color - CSS color string for the background circle
+ */
+export function getCollegeInitialsLogo(name: string, color: string): string {
+  // Extract initials (first letter of each significant word)
+  const skipWords = new Set([
+    "the", "a", "an", "of", "at", "in", "on", "for", "to", "and",
+    "university", "college", "institute", "school", "system",
+  ]);
+  const words = name.split(/\s+/);
+  let initials = "";
+  for (const w of words) {
+    const clean = w.replace(/[^a-zA-Z]/g, "");
+    if (clean.length > 0) {
+      const lower = clean.toLowerCase();
+      // Skip "University of X" pattern words, take the last significant word
+      if (!skipWords.has(lower)) {
+        initials += clean[0].toUpperCase();
+      }
+    }
+  }
+  // If initials are too long, take first 3 chars
+  if (initials.length > 3) initials = initials.slice(0, 3);
+  // If no initials extracted, use first letter of name
+  if (!initials) initials = name[0]?.toUpperCase() || "U";
+
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+    <rect width="64" height="64" rx="12" fill="${color}"/>
+    <text x="32" y="32" text-anchor="middle" dominant-baseline="central"
+          font-family="system-ui, sans-serif" font-size="24" font-weight="700" fill="white">${initials}</text>
+  </svg>`.trim();
+
+  return `data:image/svg+xml;base64,${Buffer.from(svg, "utf8").toString("base64")}`;
 }
 
 // ─── Color Helpers ───────────────────────────────────────────────

@@ -11,6 +11,20 @@ export const US_STATES = [
   "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
 ] as const;
 
+// State abbreviation → full name mapping (for filter dropdown)
+export const STATE_ABBREVIATIONS: Record<string, string> = {
+  AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+  CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
+  HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
+  KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+  MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
+  MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
+  NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
+  OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+  SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+  VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+};
+
 export const COLLEGE_TYPES = [
   { value: "public", label: "Public" },
   { value: "private", label: "Private" },
@@ -36,6 +50,27 @@ export const SORT_OPTIONS = [
   { value: "tuitionInState", label: "In-State Tuition" },
   { value: "graduationRate6yr", label: "Graduation Rate" },
   { value: "medianEarnings10yr", label: "Median Earnings (10yr)" },
+] as const;
+
+export const COLLEGE_PROGRAMS = [
+  "Agriculture",
+  "Architecture",
+  "Arts",
+  "Biology",
+  "Business",
+  "Communication",
+  "Computer Science",
+  "Criminal Justice",
+  "Education",
+  "Engineering",
+  "Health & Nursing",
+  "Law",
+  "Liberal Arts",
+  "Music",
+  "Pharmacy",
+  "Science & Research",
+  "Social Work",
+  "Theology",
 ] as const;
 
 export const ITEMS_PER_PAGE = 20;
