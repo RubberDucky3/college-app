@@ -1,29 +1,41 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { US_STATES, COLLEGE_TYPES, COLLEGE_LOCALES, COLLEGE_SIZES, SORT_OPTIONS } from "@/lib/constants";
-import { useState, useCallback } from "react";
+import { STATE_ABBREVIATIONS, COLLEGE_TYPES, COLLEGE_LOCALES, COLLEGE_SIZES, SORT_OPTIONS, COLLEGE_PROGRAMS } from "@/lib/constants";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export default function FilterPanel() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [filters, setFilters] = useState({
     query: searchParams.get("query") || "",
+    state: searchParams.get("state") || "",
     type: searchParams.get("type") || "",
     locale: searchParams.get("locale") || "",
     size: searchParams.get("size") || "",
+    program: searchParams.get("program") || "",
     sortBy: searchParams.get("sortBy") || "name",
     sortOrder: searchParams.get("sortOrder") || "asc",
   });
 
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, []);
+
   const applyFilters = useCallback(
     (updatedFilters: typeof filters) => {
-      const params = new URLSearchParams();
-      Object.entries(updatedFilters).forEach(([key, value]) => {
-        if (value) params.set(key, value);
-      });
-      router.push(`/colleges?${params.toString()}`);
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        const params = new URLSearchParams();
+        Object.entries(updatedFilters).forEach(([key, value]) => {
+          if (value) params.set(key, value);
+        });
+        router.push(`/colleges?${params.toString()}`);
+      }, 300);
     },
     [router]
   );
@@ -78,6 +90,34 @@ export default function FilterPanel() {
         ))}
       </select>
 
+      {/* State filter */}
+      <select
+        value={filters.state}
+        onChange={(e) => handleChange("state", e.target.value)}
+        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-blue-400 dark:focus:ring-blue-800"
+      >
+        <option value="">All States</option>
+        {Object.entries(STATE_ABBREVIATIONS).map(([abbr, name]) => (
+          <option key={abbr} value={abbr}>
+            {name}
+          </option>
+        ))}
+      </select>
+
+      {/* Program filter */}
+      <select
+        value={filters.program}
+        onChange={(e) => handleChange("program", e.target.value)}
+        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:focus:border-blue-400 dark:focus:ring-blue-800"
+      >
+        <option value="">All Programs</option>
+        {COLLEGE_PROGRAMS.map((p) => (
+          <option key={p} value={p}>
+            {p}
+          </option>
+        ))}
+      </select>
+
       {/* Sort */}
       <select
         value={filters.sortBy}
@@ -92,7 +132,7 @@ export default function FilterPanel() {
       </select>
 
       <button
-        onClick={() => handleChange("sortOrder", filters.sortOrder === "asc" ? "desc" : "desc")}
+        onClick={() => handleChange("sortOrder", filters.sortOrder === "asc" ? "desc" : "asc")}
         className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
         title="Toggle sort order"
       >
