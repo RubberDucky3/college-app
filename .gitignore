@@ -39,3 +39,15 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# agent tooling
+.omc/
+.omo/
+.playwright-mcp/
+
+# raw data (3.7GB)
+/College_Scorecard_Raw_Data_06032026/
+
+# screenshots
+/homepage.png
+/Screenshot*.png
