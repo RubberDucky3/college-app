@@ -1,5 +1,5 @@
-import { openai } from "@ai-sdk/openai";
 import { streamText } from "ai";
+import { provider, MENTOR_MODEL } from "@/lib/ai";
 
 export async function POST(request: Request) {
   const { messages, studentContext } = await request.json();
@@ -55,7 +55,7 @@ Guidelines:
 
   try {
     const result = streamText({
-      model: openai("gpt-4o-mini"),
+      model: provider(MENTOR_MODEL),
       system: systemPrompt,
       messages: messages.map((m: { role: string; content: string }) => ({
         role: m.role as "user" | "assistant",

@@ -1,6 +1,6 @@
-import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { z } from "zod";
+import { provider, EXTRACT_MODEL } from "@/lib/ai";
 
 const ExtractProfileSchema = z.object({
   gpa: z.number().min(0).max(5).describe("Weighted GPA (0-5 scale)"),
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
 
   try {
     const { object } = await generateObject({
-      model: openai("gpt-4o-mini"),
+      model: provider(EXTRACT_MODEL),
       schema: ExtractProfileSchema,
       system: `You are a helpful college admissions assistant. Extract academic profile information from the student's self-description.
 
