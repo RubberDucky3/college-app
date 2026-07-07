@@ -62,6 +62,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 71,
     studentsSubmittingActPct: 29,
+    programs: ["Engineering", "Computer Science", "Business", "Communication", "Liberal Arts"],
   },
   {
     id: "texas-am",
@@ -122,6 +123,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 65,
     studentsSubmittingActPct: 35,
+    programs: ["Engineering", "Agriculture", "Business", "Biology", "Science & Research"],
   },
   {
     id: "uh-main",
@@ -182,6 +184,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 55,
     studentsSubmittingActPct: 25,
+    programs: ["Business", "Engineering", "Computer Science", "Health & Nursing", "Communication"],
   },
   {
     id: "texas-state",
@@ -242,6 +245,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 30,
     studentsSubmittingActPct: 15,
+    programs: ["Communication", "Business", "Education", "Criminal Justice", "Liberal Arts"],
   },
   {
     id: "ut-dallas",
@@ -302,6 +306,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 60,
     studentsSubmittingActPct: 30,
+    programs: ["Computer Science", "Engineering", "Science & Research", "Business", "Biology"],
   },
   {
     id: "ut-arlington",
@@ -362,6 +367,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 25,
     studentsSubmittingActPct: 15,
+    programs: ["Engineering", "Computer Science", "Business", "Health & Nursing", "Liberal Arts"],
   },
   {
     id: "utsa",
@@ -422,6 +428,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 25,
     studentsSubmittingActPct: 12,
+    programs: ["Computer Science", "Business", "Engineering", "Health & Nursing", "Liberal Arts"],
   },
   {
     id: "utep",
@@ -482,6 +489,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 20,
     studentsSubmittingActPct: 10,
+    programs: ["Engineering", "Business", "Health & Nursing", "Education", "Liberal Arts"],
   },
   {
     id: "texas-tech",
@@ -542,6 +550,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 55,
     studentsSubmittingActPct: 25,
+    programs: ["Engineering", "Agriculture", "Business", "Education", "Health & Nursing"],
   },
   {
     id: "unt",
@@ -602,6 +611,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 30,
     studentsSubmittingActPct: 15,
+    programs: ["Music", "Arts", "Business", "Education", "Communication"],
   },
   {
     id: "tamucc",
@@ -662,6 +672,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Engineering", "Biology", "Business", "Education", "Liberal Arts"],
   },
   {
     id: "tamuk",
@@ -722,6 +733,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Agriculture", "Engineering", "Education", "Biology", "Criminal Justice"],
   },
   {
     id: "tamu-commerce",
@@ -782,6 +794,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Liberal Arts", "Agriculture", "Criminal Justice"],
   },
   {
     id: "tamiu",
@@ -842,6 +855,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Liberal Arts", "Criminal Justice", "Biology"],
   },
   {
     id: "shsu",
@@ -902,6 +916,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Criminal Justice", "Business", "Education", "Communication", "Agriculture"],
   },
   {
     id: "sfasu",
@@ -962,6 +977,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Agriculture", "Business", "Education", "Liberal Arts", "Criminal Justice"],
   },
   {
     id: "sul-ross",
@@ -1022,6 +1038,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Agriculture", "Education", "Liberal Arts", "Criminal Justice", "Biology"],
   },
   {
     id: "wtamu",
@@ -1082,6 +1099,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Agriculture", "Business", "Education", "Liberal Arts", "Engineering"],
   },
   {
     id: "lamar",
@@ -1142,6 +1160,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Engineering", "Business", "Education", "Health & Nursing", "Liberal Arts"],
   },
   {
     id: "mwsu",
@@ -1202,6 +1221,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Health & Nursing", "Business", "Education", "Liberal Arts", "Biology"],
   },
   {
     id: "angelo-state",
@@ -1262,6 +1282,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Agriculture", "Health & Nursing", "Liberal Arts"],
   },
   {
     id: "pvamu",
@@ -1322,6 +1343,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Engineering", "Agriculture", "Business", "Education", "Health & Nursing"],
   },
   {
     id: "tarleton",
@@ -1382,6 +1404,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Agriculture", "Business", "Education", "Liberal Arts", "Criminal Justice"],
   },
   {
     id: "utrgv",
@@ -1442,6 +1465,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Health & Nursing", "Business", "Education", "Biology", "Liberal Arts"],
   },
   {
     id: "ut-tyler",
@@ -1502,6 +1526,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Health & Nursing", "Business", "Education", "Biology", "Liberal Arts"],
   },
   {
     id: "utpb",
@@ -1562,6 +1587,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Engineering", "Health & Nursing", "Liberal Arts"],
   },
   {
     id: "tamut",
@@ -1622,6 +1648,7 @@ const publicUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Liberal Arts", "Criminal Justice", "Biology"],
   },
 ];
 
@@ -1687,6 +1714,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Engineering", "Computer Science", "Science & Research", "Music", "Architecture"],
   },
   {
     id: "smu",
@@ -1747,6 +1775,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Engineering", "Computer Science", "Communication", "Law"],
   },
   {
     id: "baylor",
@@ -1807,6 +1836,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Biology", "Education", "Health & Nursing", "Law"],
   },
   {
     id: "tcu",
@@ -1867,6 +1897,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Communication", "Liberal Arts", "Education", "Health & Nursing"],
   },
   {
     id: "trinity-u",
@@ -1927,6 +1958,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Science & Research", "Communication", "Computer Science"],
   },
   {
     id: "southwestern-u",
@@ -1987,6 +2019,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Arts", "Music", "Biology", "Business"],
   },
   {
     id: "austin-college",
@@ -2047,6 +2080,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Biology", "Business", "Education", "Arts"],
   },
   {
     id: "st-edwards",
@@ -2107,6 +2141,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Communication", "Liberal Arts", "Computer Science", "Criminal Justice"],
   },
   {
     id: "st-marys",
@@ -2167,6 +2202,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Law", "Business", "Liberal Arts", "Criminal Justice", "Education"],
   },
   {
     id: "udallas",
@@ -2227,6 +2263,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Theology", "Arts", "Education"],
   },
   {
     id: "acu",
@@ -2287,6 +2324,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Biology", "Liberal Arts", "Theology"],
   },
   {
     id: "dbu",
@@ -2347,6 +2385,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Theology", "Music", "Education", "Liberal Arts"],
   },
   {
     id: "hcu",
@@ -2407,6 +2446,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Theology", "Education", "Liberal Arts", "Health & Nursing"],
   },
   {
     id: "uiw",
@@ -2467,6 +2507,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Health & Nursing", "Business", "Education", "Pharmacy", "Liberal Arts"],
   },
   {
     id: "ollu",
@@ -2527,6 +2568,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Social Work", "Business", "Education", "Liberal Arts", "Criminal Justice"],
   },
   {
     id: "sag-u",
@@ -2587,6 +2629,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Theology", "Business", "Education", "Music", "Liberal Arts"],
   },
   {
     id: "tx-lutheran",
@@ -2647,6 +2690,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Education", "Music", "Biology"],
   },
   {
     id: "tx-wesleyan",
@@ -2707,6 +2751,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Law", "Liberal Arts", "Criminal Justice"],
   },
   {
     id: "wayland",
@@ -2767,6 +2812,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Theology", "Business", "Education", "Liberal Arts", "Music"],
   },
   {
     id: "wiley",
@@ -2827,6 +2873,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Education", "Biology", "Social Work"],
   },
   {
     id: "paul-quinn",
@@ -2887,6 +2934,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Liberal Arts", "Education", "Criminal Justice", "Social Work"],
   },
   {
     id: "jarvis-christian",
@@ -2947,6 +2995,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Education", "Biology", "Criminal Justice"],
   },
   {
     id: "letourneau",
@@ -3007,6 +3056,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Engineering", "Business", "Computer Science", "Theology", "Liberal Arts"],
   },
   {
     id: "schreiner",
@@ -3067,6 +3117,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Liberal Arts", "Biology", "Criminal Justice"],
   },
   {
     id: "concordia-texas",
@@ -3127,6 +3178,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Liberal Arts", "Theology", "Communication"],
   },
   {
     id: "huston-tillotson",
@@ -3187,6 +3239,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Education", "Biology", "Criminal Justice"],
   },
   {
     id: "hardin-simmons",
@@ -3247,6 +3300,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Theology", "Liberal Arts", "Music"],
   },
   {
     id: "mcmurry",
@@ -3307,6 +3361,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Business", "Education", "Liberal Arts", "Biology", "Music"],
   },
   {
     id: "southwestern-assemblies",
@@ -3367,6 +3422,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Theology", "Business", "Education", "Music", "Liberal Arts"],
   },
   {
     id: "southwest-adventist",
@@ -3427,6 +3483,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Education", "Biology", "Health & Nursing"],
   },
   {
     id: "hill-college",
@@ -3487,6 +3544,7 @@ const privateUniversities: College[] = [
     earlyDecisionAcceptanceRate: 0,
     studentsSubmittingSatPct: 0,
     studentsSubmittingActPct: 0,
+    programs: ["Liberal Arts", "Business", "Agriculture", "Criminal Justice", "Education"],
   },
 ];
 
