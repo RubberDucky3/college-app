@@ -89,6 +89,9 @@ export interface College {
   diversityIndex: number;
   internationalPct: number;
 
+  // Programs / Majors
+  programs: string[];
+
   // Branding
   primaryColor: string;
   secondaryColor: string;
@@ -111,6 +114,7 @@ export interface CollegeSummary {
   primaryColor: string;
   secondaryColor: string;
   logoUrl: string;
+  programs: string[];
 }
 
 // ─── Financial Aid Types ─────────────────────────────────────────
@@ -158,6 +162,60 @@ export interface Scholarship {
   essayRequired: boolean;
   renewable: boolean;
   national: boolean; // open to students nationwide
+  collegeId?: string; // specific college this scholarship belongs to
+}
+
+export interface HonorsProgram {
+  id: string;
+  name: string;
+  collegeId: string;
+  description: string;
+  features: string[];
+  eligibility: string[];
+  website: string;
+}
+
+// ─── Degree Plan Types ────────────────────────────────────────────
+
+export interface Course {
+  code: string;
+  name: string;
+  credits: number;
+  prerequisites?: string[];
+  description?: string;
+}
+
+export interface Semester {
+  name: string; // e.g. "Fall Year 1"
+  courses: Course[];
+}
+
+export interface DegreePlan {
+  id: string;
+  collegeId: string;
+  collegeName: string;
+  program: string;
+  degree: string; // e.g. "Bachelor of Science"
+  totalCredits: number;
+  semesters: Semester[];
+}
+
+// ─── Degree Offering Types ────────────────────────────────────────
+
+export interface DegreeOffering {
+  program: string;
+  degreeType: string;
+  department: string;
+  description: string;
+  sampleCourses: Course[];
+  totalCredits: number;
+}
+
+export interface ProgramCatalogEntry {
+  degreeTypes: string[];
+  commonCourses: Course[];
+  description: string;
+  typicalCredits: number;
 }
 
 // ─── Search / Filter Types ───────────────────────────────────────
@@ -168,6 +226,7 @@ export interface CollegeFilters {
   type?: College["type"];
   locale?: College["locale"];
   size?: College["size"];
+  program?: string;
   maxTuition?: number;
   minAcceptanceRate?: number;
   maxAcceptanceRate?: number;
