@@ -101,7 +101,7 @@ export default async function CollegesPage({ searchParams }: PageProps) {
       </div>
 
       {/* Ad — between filters and results */}
-      <AdSense slot="0000000001" format="auto" />
+      <AdSense slot="1047142291" format="auto" />
 
       {/* Results */}
       {colleges.length === 0 ? (

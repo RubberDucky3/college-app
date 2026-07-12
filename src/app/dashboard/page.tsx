@@ -42,7 +42,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Ad */}
-      <AdSense slot="0000000002" format="auto" />
+      <AdSense slot="9931179531" format="auto" />
 
       {/* Quick links */}
       <div className="mt-8">

@@ -307,7 +307,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
       </div>
 
       {/* Ad — between stats and net price */}
-      <AdSense slot="0000000003" format="auto" />
+      <AdSense slot="3461974102" format="auto" />
 
       {/* ─── Net Price by Income ─────────────────────────── */}
       <section className="mt-8">
