@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/chat", "/onboard", "/api/"],
     },
-    sitemap: "https://collegehub.app/sitemap.xml",
+    sitemap: "https://college-app-delta.vercel.app/sitemap.xml",
   };
 }

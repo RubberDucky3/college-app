@@ -145,7 +145,7 @@ export default async function Image({
           }}
         >
           <span>CollegeHub</span>
-          <span>collegehub.app</span>
+          <span>college-app-delta.vercel.app</span>
         </div>
       </div>
     ),

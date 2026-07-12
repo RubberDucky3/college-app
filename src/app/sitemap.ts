@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { allColleges } from "@/lib/college-data";
 
-const BASE_URL = "https://collegehub.app";
+const BASE_URL = "https://college-app-delta.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages = [

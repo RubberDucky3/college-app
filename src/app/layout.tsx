@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description:
     "Find and compare every US college. Search by tuition, acceptance rate, SAT scores, financial aid, and programs. Free college planning tools, net price calculator, and college match quiz.",
   manifest: "/manifest.json",
-  metadataBase: new URL("https://collegehub.app"),
+  metadataBase: new URL("https://college-app-delta.vercel.app"),
   openGraph: {
     type: "website",
     siteName: "CollegeHub",
