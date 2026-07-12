@@ -54,6 +54,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="google-adsense-account" content="ca-pub-6833582243561020" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -68,7 +69,7 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Google AdSense — replace ca-pub-XXXXX with your actual publisher ID */}
+        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6833582243561020"
