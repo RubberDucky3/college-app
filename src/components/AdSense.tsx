@@ -62,7 +62,7 @@ export default function AdSense({
       <ins
         ref={adRef}
         className="adsbygoogle block text-center"
-        data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+        data-ad-client="ca-pub-6833582243561020"
         data-ad-slot={slot}
         data-ad-format={format}
         data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
