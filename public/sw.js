@@ -1,4 +1,4 @@
-const CACHE = "collegehub-v1";
+const CACHE = "collegehub-v2";
 const STATIC_ASSETS = ["/", "/manifest.json"];
 
 self.addEventListener("install", (event) => {
