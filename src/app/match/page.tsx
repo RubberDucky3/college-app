@@ -446,7 +446,7 @@ export default function MatchPage() {
               )}
 
               {/* Ad — after match results */}
-              <AdSense slot="0000000004" format="auto" label="Sponsored" />
+              <AdSense slot="0000000004" format="auto" />
             </>
           )}
         </div>

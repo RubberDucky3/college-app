@@ -9,8 +9,6 @@ interface AdSenseProps {
   format?: string;
   /** Full width responsive */
   fullWidthResponsive?: boolean;
-  /** Ad label text (shown above ad) */
-  label?: string;
   /** Custom className for the wrapper */
   className?: string;
 }
@@ -31,7 +29,6 @@ export default function AdSense({
   slot,
   format = "auto",
   fullWidthResponsive = true,
-  label,
   className = "",
 }: AdSenseProps) {
   const adRef = useRef<HTMLModElement>(null);
@@ -53,25 +50,34 @@ export default function AdSense({
   }, []);
 
   return (
-    <div className={`my-6 ${className}`}>
-      {label && (
-        <p className="mb-1 text-center text-xs text-gray-400 dark:text-gray-500">
-          {label}
-        </p>
-      )}
-      <ins
-        ref={adRef}
-        className="adsbygoogle block text-center"
-        data-ad-client="ca-pub-6833582243561020"
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
-        style={{
-          display: "block",
-          overflow: "hidden",
-          backgroundColor: "transparent",
-        }}
-      />
+    <div
+      className={`relative my-8 ${className}`}
+      aria-label="Advertisement"
+    >
+      {/* Ad label — subtle but visible */}
+      <div className="mb-1 flex justify-center">
+        <span className="rounded-t-md bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+          Ad
+        </span>
+      </div>
+
+      {/* Ad container — subtle border for visual separation */}
+      <div className="overflow-hidden rounded-lg border border-gray-100 bg-gray-50/50 dark:border-gray-800 dark:bg-gray-900/50">
+        <ins
+          ref={adRef}
+          className="adsbygoogle block text-center"
+          data-ad-client="ca-pub-6833582243561020"
+          data-ad-slot={slot}
+          data-ad-format={format}
+          data-full-width-responsive={fullWidthResponsive ? "true" : "false"}
+          style={{
+            display: "block",
+            overflow: "hidden",
+            backgroundColor: "transparent",
+            minHeight: "90px",
+          }}
+        />
+      </div>
     </div>
   );
 }
