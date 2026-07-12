@@ -13,6 +13,15 @@ export function searchColleges(filters: CollegeFilters): {
 } {
   let results = [...allColleges];
 
+  // Filter out colleges with too many missing fields (useless N/A cards)
+  // Require at least one of: acceptance rate, graduation rate, or tuition
+  results = results.filter(
+    (c) =>
+      c.acceptanceRate != null ||
+      c.graduationRate4yr != null ||
+      c.tuitionInState != null,
+  );
+
   // Text search (name, city, programs)
   if (filters.query) {
     const q = filters.query.toLowerCase();
@@ -51,22 +60,22 @@ export function searchColleges(filters: CollegeFilters): {
     );
   }
 
-  // Tuition filter
+  // Tuition filter (skip null = unreported)
   if (filters.maxTuition) {
     results = results.filter(
-      (c) => c.tuitionInState <= filters.maxTuition!
+      (c) => c.tuitionInState != null && c.tuitionInState <= filters.maxTuition!
     );
   }
 
-  // Acceptance rate range
+  // Acceptance rate range (skip null = unreported)
   if (filters.minAcceptanceRate !== undefined) {
     results = results.filter(
-      (c) => c.acceptanceRate >= filters.minAcceptanceRate!
+      (c) => c.acceptanceRate != null && c.acceptanceRate >= filters.minAcceptanceRate!
     );
   }
   if (filters.maxAcceptanceRate !== undefined) {
     results = results.filter(
-      (c) => c.acceptanceRate <= filters.maxAcceptanceRate!
+      (c) => c.acceptanceRate != null && c.acceptanceRate <= filters.maxAcceptanceRate!
     );
   }
 
@@ -186,28 +195,21 @@ export function getCollegeScholarships(collegeId: string): Scholarship[] {
 
 export function getStatewideStats() {
   const colleges = allColleges;
-  const totalStudents = colleges.reduce((sum, c) => sum + c.totalEnrollment, 0);
+  const totalStudents = colleges.reduce((sum, c) => sum + (c.totalEnrollment ?? 0), 0);
+  const avg = (fn: (c: College) => number | null): number => {
+    const vals = colleges.map(fn).filter((v): v is number => v != null);
+    if (vals.length === 0) return 0;
+    return Math.round(vals.reduce((s, v) => s + v, 0) / vals.length);
+  };
   return {
     totalColleges: colleges.length,
     publicColleges: colleges.filter((c) => c.type === "public").length,
     privateColleges: colleges.filter((c) => c.type === "private").length,
     totalStudents,
-    avgInStateTuition: Math.round(
-      colleges.reduce((sum, c) => sum + c.tuitionInState, 0) /
-        colleges.length
-    ),
-    avgAcceptanceRate: Math.round(
-      colleges.reduce((sum, c) => sum + c.acceptanceRate, 0) /
-        colleges.length
-    ),
-    avgGraduationRate6yr: Math.round(
-      colleges.reduce((sum, c) => sum + c.graduationRate6yr, 0) /
-        colleges.length
-    ),
-    avgNetPrice: Math.round(
-      colleges.reduce((sum, c) => sum + c.avgNetPrice, 0) /
-        colleges.length
-    ),
+    avgInStateTuition: avg((c) => c.tuitionInState),
+    avgAcceptanceRate: avg((c) => c.acceptanceRate),
+    avgGraduationRate6yr: avg((c) => c.graduationRate6yr),
+    avgNetPrice: avg((c) => c.avgNetPrice),
   };
 }
 

@@ -7,6 +7,7 @@ import CompareBar from "@/components/CompareBar";
 import AIMentor from "@/components/AIMentor";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 import ServiceWorkerRegistration from "@/components/ServiceWorkerRegistration";
+import BackToTop from "@/components/BackToTop";
 
 export const metadata: Metadata = {
   title: {
@@ -76,6 +77,7 @@ export default function RootLayout({
           <CompareBar />
           <PwaInstallPrompt />
           <ServiceWorkerRegistration />
+          <BackToTop />
         </StudentGraphProvider>
       </body>
     </html>

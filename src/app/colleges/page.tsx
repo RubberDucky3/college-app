@@ -123,6 +123,22 @@ export default async function CollegesPage({ searchParams }: PageProps) {
           </div>
         </>
       )}
+
+      {/* Data source citation */}
+      <div className="mt-12 border-t border-gray-200 pt-6 dark:border-gray-700">
+        <p className="text-xs text-gray-400 dark:text-gray-500">
+          College data sourced from{" "}
+          <a
+            href="https://collegescorecard.ed.gov/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-gray-600 dark:hover:text-gray-300"
+          >
+            College Scorecard
+          </a>{" "}
+          (U.S. Department of Education). Acceptance rates, tuition, graduation rates, and enrollment figures are reported by institutions and may not be available for all schools. Data reflects the most recent reporting period.
+        </p>
+      </div>
     </div>
   );
 }

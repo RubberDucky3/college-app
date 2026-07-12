@@ -1,8 +1,10 @@
 import { streamText } from "ai";
 import { provider, MENTOR_MODEL } from "@/lib/ai";
+import { generateTasks, tasksToAIContext } from "@/lib/task-engine";
+import type { StudentGraph } from "@/types/student-graph";
 
 export async function POST(request: Request) {
-  const { messages, studentContext } = await request.json();
+  const { messages, studentContext, studentGraph } = await request.json();
 
   if (!messages || !Array.isArray(messages)) {
     return Response.json({ error: "Missing 'messages' array" }, { status: 400 });
@@ -38,15 +40,28 @@ export async function POST(request: Request) {
     contextBlocks.push(`Interests: ${studentContext.interests.join(", ")}`);
   }
 
+  let taskContext = "";
+  if (studentGraph && typeof studentGraph === "object") {
+    try {
+      const graph = studentGraph as StudentGraph;
+      const summary = generateTasks(graph);
+      taskContext = tasksToAIContext(summary);
+    } catch {
+      // malformed graph — skip task context
+    }
+  }
+
   const systemPrompt = `You are a knowledgeable and encouraging college admissions coach. You have access to a student's profile information and provide personalized guidance.
 
 Student Profile:
 ${contextBlocks.length > 0 ? contextBlocks.join("\n") : "No profile data available yet."}
+${taskContext ? `\nStudent Task Status:\n${taskContext}` : ""}
 
 Guidelines:
 - Be encouraging but honest about admissions competitiveness.
 - Provide specific, actionable advice based on the student's profile.
 - When discussing reach/match/safety schools, use the student's GPA and test scores.
+- Proactively reference the student's current tasks and deadlines when giving advice.
 - Suggest activities, courses, and improvements relevant to their interests.
 - Keep responses concise (2-4 paragraphs max) and conversational.
 - If you don't know something, say so rather than guessing.
@@ -55,7 +70,7 @@ Guidelines:
 
   try {
     const result = streamText({
-      model: provider(MENTOR_MODEL),
+      model: provider.chat(MENTOR_MODEL),
       system: systemPrompt,
       messages: messages.map((m: { role: string; content: string }) => ({
         role: m.role as "user" | "assistant",

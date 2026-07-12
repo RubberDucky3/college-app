@@ -1,7 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { getBotResponse, type ChatMessage } from "@/lib/chatbot";
+import { useState, useRef, useEffect, useCallback } from "react";
+import { useStudentGraph } from "@/contexts/StudentGraph";
+
+interface Message {
+  role: "user" | "assistant";
+  text: string;
+}
 
 const quickQuestions = [
   "What colleges have Engineering?",
@@ -13,32 +18,88 @@ const quickQuestions = [
 ];
 
 export default function ChatPage() {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "bot", text: "👋 Hi! I'm the CollegeHub assistant. Ask me anything about colleges — programs, tuition, admissions, deadlines, and more!" },
+  const { graph } = useStudentGraph();
+  const [messages, setMessages] = useState<Message[]>([
+    { role: "assistant", text: "👋 Hi! I'm the CollegeHub AI assistant. Ask me anything about colleges — programs, tuition, admissions, deadlines, and more! I can also help you with your application plan." },
   ]);
   const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isTyping]);
+  }, [messages, isStreaming]);
 
-  function handleSend(text: string) {
-    if (!text.trim() || isTyping) return;
-    const userMsg: ChatMessage = { role: "user", text: text.trim() };
+  const handleSend = useCallback(async (text: string) => {
+    if (!text.trim() || isStreaming) return;
+    const userMsg: Message = { role: "user", text: text.trim() };
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
-    setIsTyping(true);
+    setIsStreaming(true);
 
-    // Simulate typing delay for natural feel
-    setTimeout(() => {
-      const reply = getBotResponse(text.trim());
-      const botMsg: ChatMessage = { role: "bot", text: reply };
-      setMessages((prev) => [...prev, botMsg]);
-      setIsTyping(false);
-    }, 400 + Math.random() * 600);
-  }
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
+
+    try {
+      const apiMessages = [...messages, userMsg].map((m) => ({
+        role: m.role,
+        content: m.text,
+      }));
+
+      const res = await fetch("/api/ai/mentor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: apiMessages,
+          studentGraph: graph,
+        }),
+        signal: controller.signal,
+      });
+
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
+
+      const reader = res.body?.getReader();
+      if (!reader) throw new Error("No response body");
+
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      setMessages((prev) => [...prev, { role: "assistant", text: "" }]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (line.startsWith("0:")) {
+            const chunk = JSON.parse(line.slice(2));
+            setMessages((prev) => {
+              const updated = [...prev];
+              const last = updated[updated.length - 1];
+              if (last.role === "assistant") {
+                updated[updated.length - 1] = { ...last, text: last.text + chunk };
+              }
+              return updated;
+            });
+          }
+        }
+      }
+    } catch (err: unknown) {
+      if (err instanceof DOMException && err.name === "AbortError") return;
+      setMessages((prev) => [
+        ...prev.filter((m) => m.text !== "" || m.role === "user"),
+        { role: "assistant", text: "Sorry, something went wrong. Please try again." },
+      ]);
+    } finally {
+      setIsStreaming(false);
+    }
+  }, [messages, graph, isStreaming]);
 
   function handleKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -54,11 +115,10 @@ export default function ChatPage() {
           College Assistant
         </h1>
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-          Ask questions about colleges, programs, costs, and more
+          AI-powered guidance personalized to your profile
         </p>
       </div>
 
-      {/* Chat messages */}
       <div className="mb-4 h-[400px] overflow-y-auto rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
         {messages.length === 1 && (
           <div className="mb-4">
@@ -93,25 +153,20 @@ export default function ChatPage() {
                 }`}
               >
                 {msg.text}
+                {msg.role === "assistant" && msg.text === "" && isStreaming && i === messages.length - 1 && (
+                  <span className="flex items-center gap-1">
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.1s]" />
+                    <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.2s]" />
+                  </span>
+                )}
               </div>
             </div>
           ))}
-          {isTyping && (
-            <div className="flex justify-start">
-              <div className="max-w-[80%] rounded-2xl bg-gray-100 px-4 py-3 text-sm text-gray-500 dark:bg-gray-700 dark:text-gray-400">
-                <span className="flex items-center gap-1">
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.1s]" />
-                  <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.2s]" />
-                </span>
-              </div>
-            </div>
-          )}
         </div>
         <div ref={endRef} />
       </div>
 
-      {/* Input */}
       <div className="flex gap-2">
         <textarea
           value={input}
@@ -123,7 +178,7 @@ export default function ChatPage() {
         />
         <button
           onClick={() => handleSend(input)}
-          disabled={!input.trim() || isTyping}
+          disabled={!input.trim() || isStreaming}
           className="flex items-center gap-1.5 rounded-xl bg-blue-600 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
           Send
