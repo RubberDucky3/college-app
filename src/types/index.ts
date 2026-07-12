@@ -27,14 +27,14 @@ export interface College {
   locale: "urban" | "suburban" | "rural";
   size: "small" | "medium" | "large" | "very-large";
 
-  // Admissions
-  acceptanceRate: number; // 0-100
-  satMath25th: number;
-  satMath75th: number;
-  satReading25th: number;
-  satReading75th: number;
-  actComposite25th: number;
-  actComposite75th: number;
+  // Admissions (null = not reported)
+  acceptanceRate: number | null; // 0-100
+  satMath25th: number | null;
+  satMath75th: number | null;
+  satReading25th: number | null;
+  satReading75th: number | null;
+  actComposite25th: number | null;
+  actComposite75th: number | null;
   applicationFee: number;
   applicationDeadline: string; // e.g. "January 15"
 
@@ -51,41 +51,41 @@ export interface College {
   priorityApplicationDeadline: string;
   notificationDate: string;
 
-  // Entering Class Stats
-  earlyDecisionAcceptanceRate: number; // 0-100
-  studentsSubmittingSatPct: number; // 0-100
-  studentsSubmittingActPct: number; // 0-100
+  // Entering Class Stats (null = not reported)
+  earlyDecisionAcceptanceRate: number | null; // 0-100
+  studentsSubmittingSatPct: number | null; // 0-100
+  studentsSubmittingActPct: number | null; // 0-100
 
-  // Cost
-  tuitionInState: number;
-  tuitionOutOfState: number;
+  // Cost (null = not reported)
+  tuitionInState: number | null;
+  tuitionOutOfState: number | null;
   feesInState: number;
   feesOutOfState: number;
-  roomBoardOnCampus: number;
-  avgNetPrice: number; // avg net price after aid
-  booksAndSupplies: number;
+  roomBoardOnCampus: number | null;
+  avgNetPrice: number | null; // avg net price after aid
+  booksAndSupplies: number | null;
 
-  // Financial Aid
+  // Financial Aid (null = not reported)
   pctReceivingGrants: number;
   avgGrantAid: number;
-  pctReceivingPellGrants: number;
+  pctReceivingPellGrants: number | null;
   avgPellGrant: number;
-  pctReceivingFederalLoans: number;
+  pctReceivingFederalLoans: number | null;
   avgFederalLoan: number;
 
-  // Outcomes
-  graduationRate4yr: number;
-  graduationRate6yr: number;
-  retentionRate: number;
-  medianEarnings10yr: number; // 10 years after entry
-  medianEarnings6yr: number; // 6 years after entry
-  repaymentRate: number;
+  // Outcomes (null = not reported)
+  graduationRate4yr: number | null;
+  graduationRate6yr: number | null;
+  retentionRate: number | null;
+  medianEarnings10yr: number | null; // 10 years after entry
+  medianEarnings6yr: number | null; // 6 years after entry
+  repaymentRate: number | null;
 
-  // Demographics
-  totalEnrollment: number;
-  undergraduateEnrollment: number;
-  malePct: number;
-  femalePct: number;
+  // Demographics (null = not reported)
+  totalEnrollment: number | null;
+  undergraduateEnrollment: number | null;
+  malePct: number | null;
+  femalePct: number | null;
   diversityIndex: number;
   internationalPct: number;
 
@@ -103,14 +103,14 @@ export interface CollegeSummary {
   city: string;
   state: string;
   type: College["type"];
-  acceptanceRate: number;
-  tuitionInState: number;
-  tuitionOutOfState: number;
-  avgNetPrice: number;
-  graduationRate4yr: number;
-  graduationRate6yr: number;
-  totalEnrollment: number;
-  medianEarnings10yr: number;
+  acceptanceRate: number | null;
+  tuitionInState: number | null;
+  tuitionOutOfState: number | null;
+  avgNetPrice: number | null;
+  graduationRate4yr: number | null;
+  graduationRate6yr: number | null;
+  totalEnrollment: number | null;
+  medianEarnings10yr: number | null;
   primaryColor: string;
   secondaryColor: string;
   logoUrl: string;

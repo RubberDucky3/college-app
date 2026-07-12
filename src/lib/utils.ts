@@ -1,6 +1,7 @@
 // ─── Formatters ──────────────────────────────────────────────────
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number | null): string {
+  if (amount == null) return "N/A";
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -8,21 +9,33 @@ export function formatCurrency(amount: number): string {
   }).format(amount);
 }
 
-export function formatPercent(value: number, decimals = 1): string {
+export function formatPercent(value: number | null, decimals = 1): string {
+  if (value == null) return "N/A";
   return `${value.toFixed(decimals)}%`;
 }
 
-export function formatNumber(value: number): string {
+export function formatNumber(value: number | null): string {
+  if (value == null) return "N/A";
   return new Intl.NumberFormat("en-US").format(value);
 }
 
-export function formatSAT(scores: { math25th: number; math75th: number; reading25th: number; reading75th: number }): string {
-  const total25th = scores.math25th + scores.reading25th;
-  const total75th = scores.math75th + scores.reading75th;
-  return `${total25th}-${total75th}`;
+/** SAT range is 200-800 per section; any 0 means no data was reported. */
+export function formatSAT(scores: {
+  math25th: number | null;
+  math75th: number | null;
+  reading25th: number | null;
+  reading75th: number | null;
+}): string {
+  const m25 = scores.math25th ?? 0;
+  const m75 = scores.math75th ?? 0;
+  const r25 = scores.reading25th ?? 0;
+  const r75 = scores.reading75th ?? 0;
+  if (m25 + m75 + r25 + r75 === 0) return "N/A";
+  return `${m25 + r25}-${m75 + r75}`;
 }
 
-export function formatACT(act25th: number, act75th: number): string {
+export function formatACT(act25th: number | null, act75th: number | null): string {
+  if (act25th == null || act75th == null) return "N/A";
   return `${act25th}-${act75th}`;
 }
 
@@ -127,21 +140,24 @@ export function getCollegeInitialsLogo(name: string, color: string): string {
 
 // ─── Color Helpers ───────────────────────────────────────────────
 
-export function acceptanceRateColor(rate: number): string {
+export function acceptanceRateColor(rate: number | null): string {
+  if (rate == null) return "text-gray-400";
   if (rate < 20) return "text-red-600";
   if (rate < 40) return "text-orange-500";
   if (rate < 65) return "text-yellow-600";
   return "text-green-600";
 }
 
-export function graduationRateColor(rate: number): string {
+export function graduationRateColor(rate: number | null): string {
+  if (rate == null) return "text-gray-400";
   if (rate < 20) return "text-red-600";
   if (rate < 40) return "text-yellow-600";
   if (rate < 60) return "text-blue-600";
   return "text-green-600";
 }
 
-export function costColor(cost: number): string {
+export function costColor(cost: number | null): string {
+  if (cost == null) return "text-gray-400";
   if (cost < 15000) return "text-green-600";
   if (cost < 30000) return "text-yellow-600";
   return "text-red-600";

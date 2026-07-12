@@ -21,12 +21,16 @@ export default function ROIPage() {
         : [...nationalUniversities];
 
     return list.sort((a, b) => {
-      const getVal = (c: (typeof list)[number]) => {
-        const cost4yr = (c.tuitionInState + c.feesInState + c.roomBoardOnCampus) * 4;
+      const getVal = (c: (typeof list)[number]): number => {
+        const t = c.tuitionInState ?? 0;
+        const f = c.feesInState ?? 0;
+        const r = c.roomBoardOnCampus ?? 0;
+        const cost4yr = (t + f + r) * 4;
+        const earnings = c.medianEarnings10yr ?? 0;
         switch (sortBy) {
-          case "roi": return (c.medianEarnings10yr * 4) / cost4yr;
+          case "roi": return cost4yr > 0 ? (earnings * 4) / cost4yr : 0;
           case "cost": return cost4yr;
-          case "earnings": return c.medianEarnings10yr;
+          case "earnings": return earnings;
           case "name": return 0;
         }
       };
@@ -48,8 +52,8 @@ export default function ROIPage() {
   const maxVal = useMemo(() => {
     let m = 0;
     for (const c of chartData) {
-      const cost4yr = (c.tuitionInState + c.feesInState + c.roomBoardOnCampus) * 4;
-      m = Math.max(m, c.medianEarnings10yr, cost4yr);
+      const cost4yr = ((c.tuitionInState ?? 0) + (c.feesInState ?? 0) + (c.roomBoardOnCampus ?? 0)) * 4;
+      m = Math.max(m, c.medianEarnings10yr ?? 0, cost4yr);
     }
     return m;
   }, [chartData]);
@@ -167,9 +171,9 @@ export default function ROIPage() {
               {/* Bars */}
               {chartData.map((college, i) => {
                 const x = 60 + i * (BAR_WIDTH + 12);
-                const cost4yr = (college.tuitionInState + college.feesInState + college.roomBoardOnCampus) * 4;
+                const cost4yr = ((college.tuitionInState ?? 0) + (college.feesInState ?? 0) + (college.roomBoardOnCampus ?? 0)) * 4;
                 const costH = (cost4yr / maxVal) * (CHART_HEIGHT - 40);
-                const earnH = (college.medianEarnings10yr / maxVal) * (CHART_HEIGHT - 40);
+                const earnH = ((college.medianEarnings10yr ?? 0) / maxVal) * (CHART_HEIGHT - 40);
                 const costY = CHART_HEIGHT - costH;
                 const earnY = CHART_HEIGHT - earnH;
 
@@ -248,11 +252,11 @@ export default function ROIPage() {
               <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                 {colleges.map((college) => {
                   const cost4yr =
-                    (college.tuitionInState +
-                      college.feesInState +
-                      college.roomBoardOnCampus) * 4;
-                  const roiMultiple = college.medianEarnings10yr / (cost4yr / 4);
-                  const paybackYears = cost4yr / college.medianEarnings10yr;
+                    ((college.tuitionInState ?? 0) +
+                      (college.feesInState ?? 0) +
+                      (college.roomBoardOnCampus ?? 0)) * 4;
+                  const roiMultiple = cost4yr > 0 ? (college.medianEarnings10yr ?? 0) / (cost4yr / 4) : 0;
+                  const paybackYears = cost4yr > 0 ? cost4yr / (college.medianEarnings10yr ?? 0) : Infinity;
 
                   return (
                     <tr

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import GreetingBanner from "@/components/dashboard/GreetingBanner";
 import NextPriority from "@/components/dashboard/NextPriority";
 import UpcomingEvents from "@/components/dashboard/UpcomingEvents";
@@ -8,6 +9,7 @@ import TodayGoal from "@/components/dashboard/TodayGoal";
 import ReadinessScore from "@/components/dashboard/ReadinessScore";
 import ProgressRadar from "@/components/dashboard/ProgressRadar";
 import MilestoneTracker from "@/components/dashboard/MilestoneTracker";
+import AdSense from "@/components/AdSense";
 
 export default function DashboardPage() {
   return (
@@ -38,6 +40,9 @@ export default function DashboardPage() {
         <ProgressRadar />
         <MilestoneTracker />
       </div>
+
+      {/* Ad */}
+      <AdSense slot="0000000002" format="auto" label="Sponsored" />
 
       {/* Quick links */}
       <div className="mt-8">
@@ -87,7 +92,7 @@ function QuickLink({
   desc: string;
 }) {
   return (
-    <a
+    <Link
       href={href}
       className="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
     >
@@ -96,6 +101,6 @@ function QuickLink({
         {title}
       </h3>
       <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{desc}</p>
-    </a>
+    </Link>
   );
 }

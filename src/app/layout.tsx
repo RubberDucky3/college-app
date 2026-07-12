@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -66,6 +67,13 @@ export default function RootLayout({
               })();
             `,
           }}
+        />
+        {/* Google AdSense — replace ca-pub-XXXXX with your actual publisher ID */}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          strategy="afterInteractive"
+          crossOrigin="anonymous"
         />
       </head>
       <body className="min-h-screen flex flex-col bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">

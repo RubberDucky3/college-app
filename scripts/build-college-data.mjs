@@ -231,14 +231,14 @@ async function main() {
       locale: localeToCategory(r.LOCALE),
       size: classifySize(ugds),
 
-      // Admissions
-      acceptanceRate: parsePct(r.ADM_RATE) ?? 0,
-      satMath25th: parseNum(r.SATMT25) ?? 0,
-      satMath75th: parseNum(r.SATMT75) ?? 0,
-      satReading25th: parseNum(r.SATVR25) ?? 0,
-      satReading75th: parseNum(r.SATVR75) ?? 0,
-      actComposite25th: parseNum(r.ACTCM25) ?? 0,
-      actComposite75th: parseNum(r.ACTCM75) ?? 0,
+      // Admissions (null = not reported by the college)
+      acceptanceRate: parsePct(r.ADM_RATE), // null = not reported
+      satMath25th: parseNum(r.SATMT25),
+      satMath75th: parseNum(r.SATMT75),
+      satReading25th: parseNum(r.SATVR25),
+      satReading75th: parseNum(r.SATVR75),
+      actComposite25th: parseNum(r.ACTCM25),
+      actComposite75th: parseNum(r.ACTCM75),
       applicationFee: 0, // not in Scorecard
       applicationDeadline: "Check website",
 
@@ -256,40 +256,40 @@ async function main() {
       notificationDate: "Rolling",
 
       // Entering class stats (limited in Scorecard)
-      earlyDecisionAcceptanceRate: 0,
-      studentsSubmittingSatPct: 0,
-      studentsSubmittingActPct: 0,
+      earlyDecisionAcceptanceRate: null,
+      studentsSubmittingSatPct: null,
+      studentsSubmittingActPct: null,
 
-      // Cost
-      tuitionInState: parseDollars(r.TUITIONFEE_IN) ?? 0,
-      tuitionOutOfState: parseDollars(r.TUITIONFEE_OUT) ?? 0,
+      // Cost (null = not reported)
+      tuitionInState: parseDollars(r.TUITIONFEE_IN),
+      tuitionOutOfState: parseDollars(r.TUITIONFEE_OUT),
       feesInState: 0, // not directly available
       feesOutOfState: 0,
-      roomBoardOnCampus: parseDollars(r.ROOMBOARD_ON) ?? 0,
-      avgNetPrice: parseDollars(r.NPT4_PUB || r.NPT4_PRIV) ?? 0,
-      booksAndSupplies: parseDollars(r.BOOKSUPPLY) ?? 0,
+      roomBoardOnCampus: parseDollars(r.ROOMBOARD_ON),
+      avgNetPrice: parseDollars(r.NPT4_PUB || r.NPT4_PRIV),
+      booksAndSupplies: parseDollars(r.BOOKSUPPLY),
 
-      // Financial aid
+      // Financial aid (null = not reported)
       pctReceivingGrants: 0, // not directly in Scorecard
       avgGrantAid: 0,
-      pctReceivingPellGrants: parsePct(r.PCTPELL) ?? 0,
+      pctReceivingPellGrants: parsePct(r.PCTPELL),
       avgPellGrant: 0,
-      pctReceivingFederalLoans: parsePct(r.PCTFLOAN) ?? 0,
+      pctReceivingFederalLoans: parsePct(r.PCTFLOAN),
       avgFederalLoan: 0,
 
-      // Outcomes
-      graduationRate4yr: parsePct(r.C100_4) ?? 0,
-      graduationRate6yr: parsePct(r.C150_4) ?? 0,
-      retentionRate: parsePct(r.RET_FT4) ?? 0,
-      medianEarnings10yr: parseDollars(r.MD_EARN_WNE_P10) ?? 0,
-      medianEarnings6yr: parseDollars(r.MD_EARN_WNE_P6) ?? 0,
-      repaymentRate: parsePct(r.RPY_3YR_RT) ?? 0,
+      // Outcomes (null = not reported)
+      graduationRate4yr: parsePct(r.C100_4),
+      graduationRate6yr: parsePct(r.C150_4),
+      retentionRate: parsePct(r.RET_FT4),
+      medianEarnings10yr: parseDollars(r.MD_EARN_WNE_P10),
+      medianEarnings6yr: parseDollars(r.MD_EARN_WNE_P6),
+      repaymentRate: parsePct(r.RPY_3YR_RT),
 
-      // Demographics
-      totalEnrollment: parseNum(r.UGDS) ?? 0,
-      undergraduateEnrollment: parseNum(r.UGDS) ?? 0,
-      malePct: parsePct(r.UGDS_MEN) ?? 0,
-      femalePct: parsePct(r.UGDS_WOMEN) ?? 0,
+      // Demographics (null = not reported)
+      totalEnrollment: parseNum(r.UGDS),
+      undergraduateEnrollment: parseNum(r.UGDS),
+      malePct: parsePct(r.UGDS_MEN),
+      femalePct: parsePct(r.UGDS_WOMEN),
       diversityIndex: 0, // not computed
       internationalPct: 0,
 

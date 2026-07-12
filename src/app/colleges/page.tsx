@@ -5,6 +5,7 @@ import FilterPanel from "@/components/FilterPanel";
 import CollegeCard from "@/components/CollegeCard";
 import Pagination from "@/components/Pagination";
 import CsvExportButton from "@/components/CsvExportButton";
+import AdSense from "@/components/AdSense";
 import { searchColleges } from "@/lib/api";
 import { formatNumber } from "@/lib/utils";
 
@@ -98,6 +99,9 @@ export default async function CollegesPage({ searchParams }: PageProps) {
           <FilterPanel />
         </Suspense>
       </div>
+
+      {/* Ad — between filters and results */}
+      <AdSense slot="0000000001" format="auto" label="Sponsored" />
 
       {/* Results */}
       {colleges.length === 0 ? (

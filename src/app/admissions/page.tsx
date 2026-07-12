@@ -13,13 +13,14 @@ function Gauge({
   color,
   size = "md",
 }: {
-  value: number;
+  value: number | null;
   maxValue?: number;
   label: string;
   color: string;
   size?: "sm" | "md";
 }) {
-  const pct = Math.min((value / maxValue) * 100, 100);
+  const displayVal = value ?? 0;
+  const pct = Math.min((displayVal / maxValue) * 100, 100);
   const circumference = size === "sm" ? 2 * Math.PI * 28 : 2 * Math.PI * 40;
   const offset = circumference - (pct / 100) * circumference;
   const r = size === "sm" ? 28 : 40;
@@ -61,7 +62,7 @@ function Gauge({
           dominantBaseline="central"
           className={`${size === "sm" ? "text-[10px]" : "text-sm"} font-bold fill-gray-900 dark:fill-gray-100`}
         >
-          {maxValue === 100 ? `${Math.round(value)}%` : formatNumber(Math.round(value))}
+          {maxValue === 100 ? `${Math.round(displayVal)}%` : formatNumber(Math.round(displayVal))}
         </text>
       </svg>
       <span className={`${size === "sm" ? "text-[10px]" : "text-xs"} text-gray-500 dark:text-gray-400 text-center leading-tight`}>
@@ -71,7 +72,8 @@ function Gauge({
   );
 }
 
-function SelectivityBadge({ rate }: { rate: number }) {
+function SelectivityBadge({ rate }: { rate: number | null }) {
+  if (rate == null) return <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">Not Reported</span>;
   if (rate < 15)
     return <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-300">Most Selective</span>;
   if (rate < 30)
@@ -83,9 +85,9 @@ function SelectivityBadge({ rate }: { rate: number }) {
   return <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300">Open Admission</span>;
 }
 
-function SATGauge({ math25, math75, read25, read75 }: { math25: number; math75: number; read25: number; read75: number }) {
-  const total25 = math25 + read25;
-  const total75 = math75 + read75;
+function SATGauge({ math25, math75, read25, read75 }: { math25: number | null; math75: number | null; read25: number | null; read75: number | null }) {
+  const total25 = (math25 ?? 0) + (read25 ?? 0);
+  const total75 = (math75 ?? 0) + (read75 ?? 0);
   const mid30 = Math.round((total25 + total75) / 2);
 
   let color = "#22c55e";
@@ -138,9 +140,9 @@ export default function AdmissionsPage() {
       : [...nationalUniversities];
 
     list.sort((a, b) => {
-      if (sortBy === "rate") return a.acceptanceRate - b.acceptanceRate;
+      if (sortBy === "rate") return (a.acceptanceRate ?? 100) - (b.acceptanceRate ?? 100);
       if (sortBy === "sat")
-        return (b.satMath75th + b.satReading75th) - (a.satMath75th + a.satReading75th);
+        return ((b.satMath75th ?? 0) + (b.satReading75th ?? 0)) - ((a.satMath75th ?? 0) + (a.satReading75th ?? 0));
       return a.name.localeCompare(b.name);
     });
 
@@ -211,14 +213,17 @@ export default function AdmissionsPage() {
       ) : (
         <div className="mt-8 space-y-4">
           {colleges.map((college) => {
+            const rate = college.acceptanceRate;
             const color =
-              college.acceptanceRate < 20
-                ? "#ef4444"
-                : college.acceptanceRate < 40
-                  ? "#f59e0b"
-                  : college.acceptanceRate < 65
-                    ? "#3b82f6"
-                    : "#22c55e";
+              rate == null
+                ? "#9ca3af"
+                : rate < 20
+                  ? "#ef4444"
+                  : rate < 40
+                    ? "#f59e0b"
+                    : rate < 65
+                      ? "#3b82f6"
+                      : "#22c55e";
 
             return (
               <div
@@ -251,17 +256,17 @@ export default function AdmissionsPage() {
                   <div className="flex items-center gap-6">
                     <Gauge value={college.acceptanceRate} label="Acceptance Rate" color={color} />
                     <Gauge
-                      value={college.satMath75th + college.satReading75th}
+                      value={(college.satMath75th ?? 0) + (college.satReading75th ?? 0)}
                       maxValue={1600}
                       label="Top SAT"
-                      color={college.satMath75th + college.satReading75th >= 1300 ? "#ef4444" : "#3b82f6"}
+                      color={(college.satMath75th ?? 0) + (college.satReading75th ?? 0) >= 1300 ? "#ef4444" : "#3b82f6"}
                       size="sm"
                     />
                     <div className="hidden sm:block">
                       <Gauge
                         value={college.retentionRate}
                         label="Retention Rate"
-                        color={college.retentionRate >= 80 ? "#22c55e" : "#f59e0b"}
+                        color={college.retentionRate != null && college.retentionRate >= 80 ? "#22c55e" : "#f59e0b"}
                         size="sm"
                       />
                     </div>
@@ -294,7 +299,7 @@ export default function AdmissionsPage() {
             <p className="text-sm text-gray-600 dark:text-gray-400">
               <strong className="text-gray-900 dark:text-gray-100">{colleges.length}</strong> college{colleges.length !== 1 ? "s" : ""} · 
               Avg acceptance rate: <strong className="text-gray-900 dark:text-gray-100">
-                {formatPercent(Math.round(colleges.reduce((s, c) => s + c.acceptanceRate, 0) / colleges.length))}
+                {formatPercent(Math.round(colleges.reduce((s, c) => s + (c.acceptanceRate ?? 0), 0) / colleges.length))}
               </strong>
             </p>
           </div>

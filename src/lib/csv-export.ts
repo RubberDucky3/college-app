@@ -85,7 +85,8 @@ export function collegesToCSV(colleges: College[]): string {
     c.website,
   ]);
 
-  const escape = (val: string | number): string => {
+  const escape = (val: string | number | null): string => {
+    if (val == null) return "";
     const str = String(val);
     if (str.includes(",") || str.includes('"') || str.includes("\n")) {
       return `"${str.replace(/"/g, '""')}"`;

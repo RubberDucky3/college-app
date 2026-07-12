@@ -17,6 +17,7 @@ import {
   getCollegeInitialsLogo,
 } from "@/lib/utils";
 import { getSimilarColleges } from "@/lib/similar-colleges";
+import AdSense from "@/components/AdSense";
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -81,7 +82,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
                   ratingValue: Math.round((100 - college.acceptanceRate) * 10) / 10,
                   bestRating: 100,
                   worstRating: 0,
-                  ratingCount: Math.round(college.totalEnrollment / 100) || 10,
+                  ratingCount: Math.round((college.totalEnrollment ?? 0) / 100) || 10,
                 }
               : undefined,
           }),
@@ -152,7 +153,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
         <StatBox
           label="Acceptance Rate"
           value={formatPercent(college.acceptanceRate)}
-          color={college.acceptanceRate < 20 ? "red" : college.acceptanceRate < 50 ? "yellow" : "green"}
+          color={college.acceptanceRate != null && college.acceptanceRate < 20 ? "red" : college.acceptanceRate != null && college.acceptanceRate < 50 ? "yellow" : "green"}
         />
         <StatBox
           label="SAT Range"
@@ -277,7 +278,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
         {/* Entering Class Stats */}
         <SectionCard title="Entering Class Stats">
           <DetailRow label="Acceptance Rate" value={formatPercent(college.acceptanceRate)} />
-          <DetailRow label="Early Decision Accept. Rate" value={college.earlyDecisionAcceptanceRate > 0 ? formatPercent(college.earlyDecisionAcceptanceRate) : "N/A"} />
+          <DetailRow label="Early Decision Accept. Rate" value={college.earlyDecisionAcceptanceRate != null && college.earlyDecisionAcceptanceRate > 0 ? formatPercent(college.earlyDecisionAcceptanceRate) : "N/A"} />
           <DetailRow label="SAT Range (Middle 50%)" value={formatSAT({
             math25th: college.satMath25th,
             math75th: college.satMath75th,
@@ -285,8 +286,8 @@ export default async function CollegeDetailPage({ params }: PageProps) {
             reading75th: college.satReading75th,
           })} />
           <DetailRow label="ACT Range (Middle 50%)" value={formatACT(college.actComposite25th, college.actComposite75th)} />
-          <DetailRow label="Students Submitting SAT" value={college.studentsSubmittingSatPct > 0 ? formatPercent(college.studentsSubmittingSatPct, 0) : "N/A"} />
-          <DetailRow label="Students Submitting ACT" value={college.studentsSubmittingActPct > 0 ? formatPercent(college.studentsSubmittingActPct, 0) : "N/A"} />
+          <DetailRow label="Students Submitting SAT" value={(college.studentsSubmittingSatPct ?? 0) > 0 ? formatPercent(college.studentsSubmittingSatPct, 0) : "N/A"} />
+          <DetailRow label="Students Submitting ACT" value={(college.studentsSubmittingActPct ?? 0) > 0 ? formatPercent(college.studentsSubmittingActPct, 0) : "N/A"} />
           <DetailRow label="Application Fee" value={formatCurrency(college.applicationFee)} />
         </SectionCard>
 
@@ -304,6 +305,9 @@ export default async function CollegeDetailPage({ params }: PageProps) {
           <DetailRow label="International" value={formatPercent(college.internationalPct, 0)} />
         </SectionCard>
       </div>
+
+      {/* Ad — between stats and net price */}
+      <AdSense slot="0000000003" format="auto" label="Sponsored" />
 
       {/* ─── Net Price by Income ─────────────────────────── */}
       <section className="mt-8">
@@ -340,12 +344,12 @@ export default async function CollegeDetailPage({ params }: PageProps) {
                 { label: "$110k+", multiplier: 1.25 },
               ].map((bracket) => {
                 const est = Math.round(
-                  college.avgNetPrice * bracket.multiplier
+                  (college.avgNetPrice ?? 0) * bracket.multiplier
                 );
                 const sticker =
-                  college.tuitionInState +
-                  college.feesInState +
-                  college.roomBoardOnCampus;
+                  (college.tuitionInState ?? 0) +
+                  (college.feesInState ?? 0) +
+                  (college.roomBoardOnCampus ?? 0);
                 const diff = est - sticker;
                 return (
                   <tr
@@ -722,7 +726,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
                   <span>
                     Acceptance:{" "}
                     <span className="font-medium text-gray-900 dark:text-gray-100">
-                      {s.acceptanceRate.toFixed(0)}%
+                      {s.acceptanceRate != null ? `${s.acceptanceRate.toFixed(0)}%` : "N/A"}
                     </span>
                   </span>
                   <span>
@@ -734,7 +738,7 @@ export default async function CollegeDetailPage({ params }: PageProps) {
                   <span>
                     Grad rate:{" "}
                     <span className="font-medium text-gray-900 dark:text-gray-100">
-                      {s.graduationRate6yr.toFixed(0)}%
+                      {s.graduationRate6yr != null ? `${s.graduationRate6yr.toFixed(0)}%` : "N/A"}
                     </span>
                   </span>
                   <span>

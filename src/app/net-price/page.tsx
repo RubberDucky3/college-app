@@ -15,10 +15,11 @@ const INCOME_BRACKETS = [
 ];
 
 function estimateNetPrice(
-  avgNetPrice: number,
+  avgNetPrice: number | null,
   income: number,
   pellEligible: boolean
 ): number {
+  if (avgNetPrice == null) return 0;
   const bracket = INCOME_BRACKETS.find(
     (b) => income >= b.min && income < b.max
   ) ?? INCOME_BRACKETS[INCOME_BRACKETS.length - 1];
@@ -167,8 +168,8 @@ export default function NetPriceCalculatorPage() {
                 income,
                 pellEligible
               );
-              const roiMultiple = college.medianEarnings10yr / estNetPrice;
-              const isAffordable = estNetPrice < college.medianEarnings10yr * 0.6;
+              const roiMultiple = college.medianEarnings10yr != null ? college.medianEarnings10yr / estNetPrice : 0;
+              const isAffordable = estNetPrice < (college.medianEarnings10yr ?? 0) * 0.6;
 
               return (
                 <div

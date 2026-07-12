@@ -34,8 +34,6 @@ export default async function PlannerPage({ params }: PageProps) {
   const plan = getCollegePlan(college.id, programName);
   if (!plan) notFound();
 
-  const completedCredits = 0;
-
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Breadcrumb */}

@@ -43,7 +43,7 @@ export default async function Image({
 
   const primary = college.primaryColor || "#2563eb";
   const tuition =
-    college.type === "public" && college.tuitionInState > 0
+    college.type === "public" && (college.tuitionInState ?? 0) > 0
       ? college.tuitionInState
       : college.tuitionOutOfState;
 
@@ -114,7 +114,7 @@ export default async function Image({
             />
             <StatBox
               label="Tuition"
-              value={tuition > 0 ? formatCurrency(tuition) : "Varies"}
+              value={tuition != null && tuition > 0 ? formatCurrency(tuition) : "Varies"}
             />
             <StatBox
               label="Graduation Rate"
@@ -123,9 +123,9 @@ export default async function Image({
             <StatBox
               label="Enrollment"
               value={
-                college.undergraduateEnrollment > 0
-                  ? `${(college.undergraduateEnrollment / 1000).toFixed(1)}k`
-                  : `${(college.totalEnrollment / 1000).toFixed(1)}k`
+                (college.undergraduateEnrollment ?? 0) > 0
+                  ? `${((college.undergraduateEnrollment ?? 0) / 1000).toFixed(1)}k`
+                  : `${((college.totalEnrollment ?? 0) / 1000).toFixed(1)}k`
               }
             />
           </div>

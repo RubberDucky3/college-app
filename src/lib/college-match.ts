@@ -38,12 +38,12 @@ export interface MatchResult {
   type: "public" | "private" | "for-profit";
   locale: "urban" | "suburban" | "rural";
   size: "small" | "medium" | "large" | "very-large";
-  acceptanceRate: number;
-  tuitionInState: number;
-  avgNetPrice: number;
-  graduationRate6yr: number;
-  totalEnrollment: number;
-  medianEarnings10yr: number;
+  acceptanceRate: number | null;
+  tuitionInState: number | null;
+  avgNetPrice: number | null;
+  graduationRate6yr: number | null;
+  totalEnrollment: number | null;
+  medianEarnings10yr: number | null;
   primaryColor: string;
   matchScore: number; // 0-100 overall match
   selectivityTag: "safety" | "target" | "reach";
@@ -58,7 +58,8 @@ const SIZE_ORDER: Record<string, number> = {
   "very-large": 3,
 };
 
-function getSelectivityTag(acceptanceRate: number): "safety" | "target" | "reach" {
+function getSelectivityTag(acceptanceRate: number | null): "safety" | "target" | "reach" {
+  if (acceptanceRate == null) return "target";
   if (acceptanceRate >= 70) return "safety";
   if (acceptanceRate >= 35) return "target";
   return "reach";
@@ -87,7 +88,7 @@ function scoreLocale(college: College, pref: string): number {
 function scoreSelectivity(college: College, pref: string): number {
   if (pref === "any") return 0.5;
   const ar = college.acceptanceRate;
-  // Map preferences to ideal rate ranges
+  if (ar == null) return 0.5;
   if (pref === "safety") {
     if (ar >= 75) return 1;
     if (ar >= 50) return 0.7;
@@ -112,9 +113,9 @@ function scoreSelectivity(college: College, pref: string): number {
 function scoreTuition(college: College, maxTuition: number): number {
   if (maxTuition <= 0) return 0.5;
   const tuition = college.tuitionInState;
+  if (tuition == null) return 0.5;
   if (tuition <= maxTuition) return 1;
   const overage = tuition - maxTuition;
-  // Gradually decay for over-budget schools
   if (overage < 5000) return 0.7;
   if (overage < 15000) return 0.4;
   return 0.15;
@@ -136,8 +137,10 @@ function scoreState(college: College, state: string): number {
 
 function scoreGradRate(college: College, minRate: number): number {
   if (minRate <= 0) return 0.5;
-  if (college.graduationRate6yr >= minRate) return 1;
-  const shortfall = minRate - college.graduationRate6yr;
+  const rate = college.graduationRate6yr;
+  if (rate == null) return 0.5;
+  if (rate >= minRate) return 1;
+  const shortfall = minRate - rate;
   if (shortfall < 10) return 0.6;
   if (shortfall < 20) return 0.3;
   return 0.1;
@@ -145,8 +148,10 @@ function scoreGradRate(college: College, minRate: number): number {
 
 function scoreEarnings(college: College, minEarnings: number): number {
   if (minEarnings <= 0) return 0.5;
-  if (college.medianEarnings10yr >= minEarnings) return 1;
-  const ratio = college.medianEarnings10yr / minEarnings;
+  const e = college.medianEarnings10yr;
+  if (e == null) return 0.5;
+  if (e >= minEarnings) return 1;
+  const ratio = e / minEarnings;
   if (ratio >= 0.8) return 0.7;
   if (ratio >= 0.5) return 0.4;
   return 0.15;
@@ -155,6 +160,7 @@ function scoreEarnings(college: College, minEarnings: number): number {
 function scoreCampusSize(college: College, pref: string): number {
   if (pref === "any") return 0.5;
   const enrollment = college.totalEnrollment;
+  if (enrollment == null) return 0.5;
   if (pref === "small") return enrollment < 5000 ? 1 : enrollment < 10000 ? 0.5 : 0.2;
   if (pref === "medium") return enrollment >= 5000 && enrollment <= 15000 ? 1 : enrollment > 15000 ? 0.5 : 0.3;
   if (pref === "large") return enrollment > 15000 ? 1 : enrollment > 10000 ? 0.6 : 0.2;

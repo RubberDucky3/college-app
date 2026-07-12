@@ -67,7 +67,12 @@ function computeRanges(): Record<string, { min: number; max: number }> {
   let satMin = Infinity;
   let satMax = -Infinity;
   for (const c of allColleges) {
-    const mid = (c.satMath25th + c.satReading25th + c.satMath75th + c.satReading75th) / 2;
+    const m25 = c.satMath25th;
+    const m75 = c.satMath75th;
+    const r25 = c.satReading25th;
+    const r75 = c.satReading75th;
+    if (m25 == null || m75 == null || r25 == null || r75 == null) continue;
+    const mid = (m25 + r25 + m75 + r75) / 2;
     if (mid < satMin) satMin = mid;
     if (mid > satMax) satMax = mid;
   }
@@ -84,20 +89,34 @@ function normalize(value: number, key: string): number {
 }
 
 function extractFeatures(college: College): NumericFeatures {
-  const satMid = normalize(
-    (college.satMath25th + college.satReading25th + college.satMath75th + college.satReading75th) / 2,
-    "satMidpoint"
-  );
+  // For null values, use 0.5 (neutral) so the college isn't penalized for missing data
+  const safe = (v: number | null, key: string) =>
+    v != null ? normalize(v, key) : 0.5;
+
+  const m25 = college.satMath25th;
+  const m75 = college.satMath75th;
+  const r25 = college.satReading25th;
+  const r75 = college.satReading75th;
+  const satMid =
+    m25 != null && m75 != null && r25 != null && r75 != null
+      ? normalize((m25 + r25 + m75 + r75) / 2, "satMidpoint")
+      : 0.5;
+
+  const logEnroll =
+    college.totalEnrollment != null
+      ? normalize(Math.log10(college.totalEnrollment + 1), "totalEnrollment")
+      : 0.5;
+
   return {
     sizeScore: (SIZE_MAP[college.size] ?? 1) / 3,
     localeScore: (LOCALE_MAP[college.locale] ?? 1) / 2,
     typeScore: (TYPE_MAP[college.type] ?? 1) / 2,
-    acceptanceRate: normalize(college.acceptanceRate, "acceptanceRate"),
-    tuitionCost: normalize(college.tuitionInState, "tuitionInState"),
-    netPrice: normalize(college.avgNetPrice, "avgNetPrice"),
-    enrollment: normalize(Math.log10(college.totalEnrollment + 1), "totalEnrollment"),
-    graduationRate: normalize(college.graduationRate6yr, "graduationRate6yr"),
-    medianEarnings: normalize(college.medianEarnings10yr, "medianEarnings10yr"),
+    acceptanceRate: safe(college.acceptanceRate, "acceptanceRate"),
+    tuitionCost: safe(college.tuitionInState, "tuitionInState"),
+    netPrice: safe(college.avgNetPrice, "avgNetPrice"),
+    enrollment: logEnroll,
+    graduationRate: safe(college.graduationRate6yr, "graduationRate6yr"),
+    medianEarnings: safe(college.medianEarnings10yr, "medianEarnings10yr"),
     satMidpoint: satMid,
   };
 }
@@ -146,12 +165,12 @@ export interface SimilarCollegeResult {
   type: "public" | "private" | "for-profit";
   locale: "urban" | "suburban" | "rural";
   size: "small" | "medium" | "large" | "very-large";
-  acceptanceRate: number;
-  tuitionInState: number;
-  avgNetPrice: number;
-  graduationRate6yr: number;
-  totalEnrollment: number;
-  medianEarnings10yr: number;
+  acceptanceRate: number | null;
+  tuitionInState: number | null;
+  avgNetPrice: number | null;
+  graduationRate6yr: number | null;
+  totalEnrollment: number | null;
+  medianEarnings10yr: number | null;
   primaryColor: string;
   similarityScore: number; // 0 = identical, higher = less similar
   matchPercent: number; // 0-100, higher = more similar

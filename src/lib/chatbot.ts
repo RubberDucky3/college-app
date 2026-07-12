@@ -164,7 +164,7 @@ function formatCollegeBrief(c: College): string {
     `• Avg net price: **${formatCurrency(c.avgNetPrice)}**`,
     `• Graduation rate (4yr): **${formatPercent(c.graduationRate4yr)}**`,
     `• Median earnings (10yr): **${formatCurrency(c.medianEarnings10yr)}**`,
-    `• Enrollment: **${c.totalEnrollment.toLocaleString()}**`,
+    `• Enrollment: **${c.totalEnrollment != null ? c.totalEnrollment.toLocaleString() : "N/A"}**`,
     `• Programs: ${c.programs.slice(0, 5).join(", ")}${c.programs.length > 5 ? ` +${c.programs.length - 5} more` : ""}`,
   ].join("\n");
 }
@@ -245,20 +245,30 @@ function responseForAcceptanceRate(name: string): string {
   }
   const c = matches[0];
   const color =
-    c.acceptanceRate < 20
-      ? "very selective"
-      : c.acceptanceRate < 40
-        ? "selective"
-        : c.acceptanceRate < 65
-          ? "moderately selective"
-          : "open admission";
+    c.acceptanceRate == null
+      ? "not reported"
+      : c.acceptanceRate < 20
+        ? "very selective"
+        : c.acceptanceRate < 40
+          ? "selective"
+          : c.acceptanceRate < 65
+            ? "moderately selective"
+            : "open admission";
+  const satRange =
+    c.satMath25th != null && c.satReading25th != null && c.satMath75th != null && c.satReading75th != null
+      ? `**${c.satMath25th + c.satReading25th}-${c.satMath75th + c.satReading75th}**`
+      : "N/A";
+  const actRange =
+    c.actComposite25th != null && c.actComposite75th != null
+      ? `**${c.actComposite25th}-${c.actComposite75th}**`
+      : "N/A";
   return [
     `**${c.name}** — Admission Stats`,
     `• Acceptance rate: **${formatPercent(c.acceptanceRate)}** (${color})`,
-    `• SAT range (middle 50%): **${c.satMath25th + c.satReading25th}-${c.satMath75th + c.satReading75th}**`,
-    `• ACT range (middle 50%): **${c.actComposite25th}-${c.actComposite75th}**`,
+    `• SAT range (middle 50%): ${satRange}`,
+    `• ACT range (middle 50%): ${actRange}`,
     `• Test policy: **${c.standardizedTestPolicy.replace(/-/g, " ")}**`,
-    c.earlyDecisionAcceptanceRate > 0
+    c.earlyDecisionAcceptanceRate != null && c.earlyDecisionAcceptanceRate > 0
       ? `• Early decision acceptance rate: **${formatPercent(c.earlyDecisionAcceptanceRate)}**`
       : "",
     `• Application fee: **${formatCurrency(c.applicationFee)}**`,
@@ -291,12 +301,17 @@ function responseForEarnings(name: string): string {
   if (matches.length > 1)
     return `Which one? ${matches.map((m) => `**${m.name}**`).join(", ")}?`;
   const c = matches[0];
-  const roi = c.medianEarnings10yr / ((c.tuitionInState + c.feesInState + c.roomBoardOnCampus) * 4);
+  const totalCost =
+    (c.tuitionInState ?? 0) + (c.feesInState ?? 0) + (c.roomBoardOnCampus ?? 0);
+  const roi =
+    c.medianEarnings10yr != null && totalCost > 0
+      ? c.medianEarnings10yr / (totalCost * 4)
+      : null;
   return [
     `**${c.name}** — Earnings & ROI`,
     `• Median earnings (10yr after entry): **${formatCurrency(c.medianEarnings10yr)}**`,
     `• Median earnings (6yr after entry): **${formatCurrency(c.medianEarnings6yr)}**`,
-    `• Annual ROI multiple: **${roi.toFixed(1)}×**`,
+    `• Annual ROI multiple: **${roi != null ? roi.toFixed(1) + "×" : "N/A"}**`,
     `• Loan repayment rate: **${formatPercent(c.repaymentRate)}**`,
   ].join("\n");
 }
@@ -351,7 +366,7 @@ function responseForCompare(query: string): string {
     `| Avg Net Price | ${formatCurrency(c1.avgNetPrice)} | ${formatCurrency(c2.avgNetPrice)} |`,
     `| Graduation (4yr) | ${formatPercent(c1.graduationRate4yr)} | ${formatPercent(c2.graduationRate4yr)} |`,
     `| Median Earnings (10yr) | ${formatCurrency(c1.medianEarnings10yr)} | ${formatCurrency(c2.medianEarnings10yr)} |`,
-    `| Enrollment | ${c1.totalEnrollment.toLocaleString()} | ${c2.totalEnrollment.toLocaleString()} |`,
+    `| Enrollment | ${c1.totalEnrollment != null ? c1.totalEnrollment.toLocaleString() : "N/A"} | ${c2.totalEnrollment != null ? c2.totalEnrollment.toLocaleString() : "N/A"} |`,
     `| Retention Rate | ${formatPercent(c1.retentionRate)} | ${formatPercent(c2.retentionRate)} |`,
   ].join("\n");
 }

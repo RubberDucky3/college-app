@@ -5,6 +5,7 @@ import Link from "next/link";
 import { QUIZ_QUESTIONS, findMatches } from "@/lib/college-match";
 import type { QuizPreferences, MatchResult } from "@/lib/college-match";
 import { formatCurrency, formatPercent, getCollegeInitialsLogo } from "@/lib/utils";
+import AdSense from "@/components/AdSense";
 
 type Step = "intro" | "quiz" | "results";
 
@@ -443,6 +444,9 @@ export default function MatchPage() {
                   </button>
                 </div>
               )}
+
+              {/* Ad — after match results */}
+              <AdSense slot="0000000004" format="auto" label="Sponsored" />
             </>
           )}
         </div>
@@ -526,7 +530,7 @@ function CollegeMatchCard({
           <span>
             Acceptance:{" "}
             <span className="font-medium text-gray-900 dark:text-gray-100">
-              {college.acceptanceRate.toFixed(0)}%
+              {college.acceptanceRate != null ? `${college.acceptanceRate.toFixed(0)}%` : "N/A"}
             </span>
           </span>
           <span>
@@ -538,7 +542,7 @@ function CollegeMatchCard({
           <span>
             Grad rate:{" "}
             <span className="font-medium text-gray-900 dark:text-gray-100">
-              {college.graduationRate6yr.toFixed(0)}%
+              {college.graduationRate6yr != null ? `${college.graduationRate6yr.toFixed(0)}%` : "N/A"}
             </span>
           </span>
           <span>
@@ -556,7 +560,7 @@ function CollegeMatchCard({
           >
             {college.selectivityTag}
           </span>
-          {prefs.maxTuition > 0 && college.tuitionInState <= prefs.maxTuition && (
+          {prefs.maxTuition > 0 && college.tuitionInState != null && college.tuitionInState <= prefs.maxTuition && (
             <span className="rounded-full bg-teal-100 px-2 py-0.5 text-[10px] font-semibold text-teal-700 dark:bg-teal-900/40 dark:text-teal-300">
               In Budget
             </span>

@@ -414,7 +414,7 @@ export default function MapPage() {
                     Enrollment
                   </span>
                   <span className="font-medium text-gray-900 dark:text-gray-100">
-                    {selected.totalEnrollment.toLocaleString()}
+                    {selected.totalEnrollment != null ? selected.totalEnrollment.toLocaleString() : "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between">
