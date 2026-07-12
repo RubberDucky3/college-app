@@ -1,0 +1,9 @@
+.next/
+node_modules/
+College_Scorecard_Raw_Data_06032026/
+*.png
+*.jpg
+*.jpeg
+.omc/
+.omo/
+.playwright-mcp/
