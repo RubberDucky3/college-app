@@ -1,0 +1,3 @@
+# Ads.txt file for CollegeHub
+# https://iabtechlab.com/ads-txt/
+google.com, pub-6833582243561020, DIRECT, f08c47fec0942fa0
