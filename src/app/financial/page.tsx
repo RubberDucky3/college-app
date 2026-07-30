@@ -6,6 +6,7 @@ import {
   scholarships,
 } from "@/lib/financial-data";
 import { formatCurrency } from "@/lib/utils";
+import ScholarshipList from "@/components/ScholarshipList";
 
 export const metadata: Metadata = {
   title: "Financial Aid, Grants & Scholarships — CollegeHub",
@@ -173,55 +174,7 @@ export default function FinancialAidPage() {
             don&apos;t require repayment.
           </p>
         </div>
-        <div className="space-y-4">
-          {scholarships.map((scholarship) => (
-            <AidCard
-              key={scholarship.id}
-              type="scholarship"
-              title={scholarship.name}
-            >
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {scholarship.description}
-              </p>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-                <div>
-                  <span className="text-gray-500 dark:text-gray-400">Amount</span>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">
-                    {formatCurrency(scholarship.amount)}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-gray-500 dark:text-gray-400">Provider</span>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">
-                    {scholarship.provider}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-gray-500 dark:text-gray-400">Type</span>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100 capitalize">
-                    {scholarship.type}
-                  </p>
-                </div>
-                <div>
-                  <span className="text-gray-500 dark:text-gray-400">Deadline</span>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100">
-                    {scholarship.deadline}
-                  </p>
-                </div>
-              </div>
-              {scholarship.eligibility.length > 0 && (
-                <div className="mt-2">
-                  <span className="text-xs font-medium text-gray-500 dark:text-gray-400">
-                    ELIGIBILITY
-                  </span>
-                  <p className="text-sm text-gray-700 dark:text-gray-300">
-                    {scholarship.eligibility.join(" · ")}
-                  </p>
-                </div>
-              )}
-            </AidCard>
-          ))}
-        </div>
+        <ScholarshipList />
       </section>
 
       {/* Footer note */}
