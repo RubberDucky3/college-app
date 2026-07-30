@@ -63,10 +63,10 @@ export default function DashboardPage() {
             desc="Grants, loans, scholarships"
           />
           <QuickLink
-            href="/tracker"
-            emoji="📊"
-            title="Application Tracker"
-            desc="Track deadlines and statuses"
+            href="/today"
+            emoji="☀️"
+            title="Today"
+            desc="Your plan for the next hour"
           />
           <QuickLink
             href="/degrees"
