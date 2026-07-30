@@ -10,6 +10,7 @@ import NotificationCenter from "./NotificationCenter";
 
 const MAIN_LINKS = [
   { href: "/", label: "Home" },
+  { href: "/today", label: "Today" },
   { href: "/colleges", label: "Colleges" },
   { href: "/match", label: "Match" },
   { href: "/map", label: "Map" },

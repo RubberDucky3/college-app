@@ -37,7 +37,7 @@ function getSuggestions(
     suggestions.push({
       title: "Track your applications",
       description: "Stay on top of deadlines and requirements",
-      href: "/tracker",
+      href: "/deadlines",
       emoji: "📊",
     });
   }
